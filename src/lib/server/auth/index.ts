@@ -1,11 +1,10 @@
-import GitHub from '@auth/core/providers/github';
-import { DrizzleAdapter } from './drizzle-adapter';
-import type { SvelteKitAuthConfig } from '@auth/sveltekit';
-import { db } from '../db';
 import { env } from '$env/dynamic/private';
-import type { DefaultSession, User } from '@auth/core/types';
-import { users, type UsersModel } from '../db/schema';
+import GitHub from '@auth/core/providers/github';
+import type { SvelteKitAuthConfig } from '@auth/sveltekit';
 import { eq } from 'drizzle-orm';
+import { db } from '../db';
+import { users } from '../db/schema';
+import { DrizzleAdapter } from './drizzle-adapter';
 
 export const authOptions = {
 	adapter: DrizzleAdapter(db),
@@ -82,17 +81,3 @@ export const authOptions = {
 	// 	verifyRequest: '/login'
 	// }
 } satisfies SvelteKitAuthConfig;
-
-declare module '@auth/core/types' {
-	export interface User extends Pick<UsersModel, 'id' | 'name' | 'email' | 'image' | 'status'> {}
-
-	export interface Session extends DefaultSession {
-		user: User;
-	}
-}
-
-declare module '@auth/core/jwt' {
-	export interface JWT extends DefaultJWT {
-		user: User;
-	}
-}
