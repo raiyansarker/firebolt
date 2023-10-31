@@ -19,11 +19,12 @@ export const authOptions = {
 		 */
 	],
 	callbacks: {
-		async signIn({ user }) {
+		async signIn({user}) {
 			/**
 			 * don't let banned users to login
 			 * hold users can login but can't do much actions
 			 */
+			if (!user) return true; // user object is null if user is not found on the first signin
 			if (!user.email || user.status === 'banned') return false;
 
 			return true;
