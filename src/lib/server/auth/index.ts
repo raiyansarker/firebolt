@@ -73,7 +73,8 @@ export const authOptions = {
 	},
 	session: {
 		strategy: 'jwt'
-	}
+	},
+	trustHost: true
 	// pages: {
 	// 	signIn: '/login',
 	// 	signOut: '/',
