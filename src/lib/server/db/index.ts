@@ -10,7 +10,7 @@ const connection = createClient({ url: env.DATABASE_URL, authToken: env.DATABASE
 
 class CustomLogger implements Logger {
 	logQuery(query: string, params: unknown[]): void {
-		console.log(`${chalk.greenBright(query)} : ${chalk.yellowBright(params)}`);
+		console.log(`${chalk.blueBright("Query")} : ${chalk.greenBright(query)} - ${chalk.yellowBright(params)}`);
 	}
 }
 const db = drizzle(connection, { logger: !production && new CustomLogger(), schema });
