@@ -3,6 +3,4 @@ import { reqLogger as logger } from '$lib/server/hooks/log';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
-export const ssr = true;
-
 export const handle = sequence(logger, authHandler) satisfies Handle;
