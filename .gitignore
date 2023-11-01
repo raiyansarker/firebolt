@@ -1,9 +1,11 @@
 .DS_Store
 node_modules
+.wrangler
 /build
 /.svelte-kit
 /package
 .env
+.dev.vars
 .env.*
 !.env.example
 vite.config.js.timestamp-*

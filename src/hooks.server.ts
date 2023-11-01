@@ -1,5 +1,8 @@
-import { authOptions } from '$lib/server/auth';
-import { SvelteKitAuth } from '@auth/sveltekit';
+import { authHandler } from '$lib/server/hooks/auth';
+import { reqLogger as logger } from '$lib/server/hooks/log';
 import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 
-export const handle = SvelteKitAuth(authOptions) satisfies Handle;
+export const ssr = true;
+
+export const handle = sequence(logger, authHandler) satisfies Handle;

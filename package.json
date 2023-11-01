@@ -13,6 +13,7 @@
 		"db": "drizzle-kit"
 	},
 	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20231025.0",
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/adapter-cloudflare": "^2.3.3",
 		"@sveltejs/kit": "^1.27.2",
@@ -41,6 +42,7 @@
 	"dependencies": {
 		"@auth/core": "^0.18.0",
 		"@auth/sveltekit": "^0.3.11",
+		"@axiomhq/js": "1.0.0-rc.1",
 		"@libsql/client": "^0.3.6",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"bits-ui": "^0.9.0",

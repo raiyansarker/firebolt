@@ -4,13 +4,16 @@
 import type { DefaultJWT, DefaultSession } from '@auth/core/types';
 import type { UsersModel } from '$lib/db/models';
 import type { User } from '@auth/core/types';
+import type { IncomingRequestCfProperties } from '@cloudflare/workers-types';
 
 declare global {
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
-		// interface Platform {}
+		interface Platform {
+			cf?: IncomingRequestCfProperties;
+		}
 	}
 }
 
