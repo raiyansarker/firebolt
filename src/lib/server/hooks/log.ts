@@ -1,5 +1,4 @@
 import { env } from '$env/dynamic/private';
-import { production } from '$lib/utils';
 import { Axiom } from '@axiomhq/js';
 import type { Handle } from '@sveltejs/kit';
 
@@ -22,7 +21,7 @@ const reqLogger: Handle = async ({ event, resolve }) => {
 	/**
 	 * Send logs only in production
 	 */
-	if (!production) return resolve(event);
+	if (!env.CF_PAGES) return resolve(event);
 
 	const axiom = new Axiom({
 		token: env.AXIOM_TOKEN,
