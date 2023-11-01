@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/private';
-import GitHub from '@auth/core/providers/github';
+import GitHubProvider from '@auth/core/providers/github';
+import GoogleProvider from '@auth/core/providers/google';
 import type { SvelteKitAuthConfig } from '@auth/sveltekit';
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
@@ -11,13 +12,17 @@ export const authOptions = {
 	adapter: DrizzleAdapter(db),
 	secret: env.AUTH_SECRET,
 	providers: [
-		GitHub({
+		GitHubProvider({
 			clientId: env.GITHUB_ID,
 			clientSecret: env.GITHUB_SECRET
-		})
+		}),
 		/**
-		 * Todo: add support for google and email provider
+		 * Todo: add support for email provider
 		 */
+		GoogleProvider({
+			clientId: env.GOOGLE_ID,
+			clientSecret: env.GOOGLE_SECRET
+		})
 	],
 	callbacks: {
 		async signIn({ user }) {
