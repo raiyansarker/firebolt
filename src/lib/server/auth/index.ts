@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '../db';
 import { users } from '../db/schema';
 import { DrizzleAdapter } from './drizzle-adapter';
+import { base as baseUrl } from '$app/paths';
 
 export const authOptions = {
 	adapter: DrizzleAdapter(db),
@@ -19,7 +20,7 @@ export const authOptions = {
 		 */
 	],
 	callbacks: {
-		async signIn({user}) {
+		async signIn({ user }) {
 			/**
 			 * don't let banned users to login
 			 * hold users can login but can't do much actions
@@ -74,6 +75,7 @@ export const authOptions = {
 	session: {
 		strategy: 'jwt'
 	},
+	prefix: `${baseUrl}/api/auth`,
 	trustHost: true
 	// pages: {
 	// 	signIn: '/login',
