@@ -1,12 +1,12 @@
-import { env } from '$env/dynamic/private';
-import GitHubProvider from '@auth/core/providers/github';
-import GoogleProvider from '@auth/core/providers/google';
-import type { SvelteKitAuthConfig } from '@auth/sveltekit';
-import { eq } from 'drizzle-orm';
-import { db } from '../db';
-import { users } from '../db/schema';
-import { DrizzleAdapter } from './drizzle-adapter';
-import { base as baseUrl } from '$app/paths';
+import { env } from "$env/dynamic/private";
+import GitHubProvider from "@auth/core/providers/github";
+import GoogleProvider from "@auth/core/providers/google";
+import type { SvelteKitAuthConfig } from "@auth/sveltekit";
+import { eq } from "drizzle-orm";
+import { db } from "../db";
+import { users } from "../db/schema";
+import { DrizzleAdapter } from "./drizzle-adapter";
+import { base as baseUrl } from "$app/paths";
 
 export const authOptions = {
 	adapter: DrizzleAdapter(db),
@@ -31,7 +31,7 @@ export const authOptions = {
 			 * hold users can login but can't do much actions
 			 */
 			if (!user) return true; // user object is null if user is not found on the first signin
-			if (!user.email || user.status === 'banned') return false;
+			if (!user.email || user.status === "banned") return false;
 
 			return true;
 		},
@@ -53,7 +53,7 @@ export const authOptions = {
 			/**
 			 * Refresh user data if they update their profile
 			 */
-			if (trigger === 'update') {
+			if (trigger === "update") {
 				const refreshedUser = await db.query.users.findFirst({
 					where: eq(users.id, token.sub!)
 				});
@@ -78,14 +78,14 @@ export const authOptions = {
 		}
 	},
 	session: {
-		strategy: 'jwt'
+		strategy: "jwt"
 	},
 	prefix: `${baseUrl}/api/auth`,
 	trustHost: true,
 	pages: {
-		signIn: '/login',
-		signOut: '/',
-		error: '/login',
-		verifyRequest: '/login'
+		signIn: "/login",
+		signOut: "/",
+		error: "/login",
+		verifyRequest: "/login"
 	}
 } satisfies SvelteKitAuthConfig;

@@ -1,7 +1,7 @@
-import type { Adapter, AdapterAccount } from '@auth/core/adapters';
-import type { DbClient } from '../db';
-import { users, sessions, accounts, verificationTokens } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import type { Adapter, AdapterAccount } from "@auth/core/adapters";
+import type { DbClient } from "../db";
+import { users, sessions, accounts, verificationTokens } from "../db/schema";
+import { and, eq } from "drizzle-orm";
 
 export function DrizzleAdapter(client: DbClient): Adapter {
 	return {
@@ -36,7 +36,7 @@ export function DrizzleAdapter(client: DbClient): Adapter {
 		},
 		async updateUser(data) {
 			if (!data.id) {
-				throw new Error('No user id.');
+				throw new Error("No user id.");
 			}
 
 			return await client.update(users).set(data).where(eq(users.id, data.id)).returning().get();
@@ -108,7 +108,7 @@ export function DrizzleAdapter(client: DbClient): Adapter {
 						.get()) ?? null
 				);
 			} catch (err) {
-				throw new Error('No verification token found.');
+				throw new Error("No verification token found.");
 			}
 		},
 		async deleteUser(id) {

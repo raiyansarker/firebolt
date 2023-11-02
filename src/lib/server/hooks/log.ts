@@ -1,6 +1,6 @@
-import { env } from '$env/dynamic/private';
-import { Axiom } from '@axiomhq/js';
-import type { Handle } from '@sveltejs/kit';
+import { env } from "$env/dynamic/private";
+import { Axiom } from "@axiomhq/js";
+import type { Handle } from "@sveltejs/kit";
 
 function getHeaderMap(headers: Headers, allowlist: string[]) {
 	if (!allowlist.length) {
@@ -35,7 +35,7 @@ const reqLogger: Handle = async ({ event, resolve }) => {
 	if (event.platform?.cf) {
 		// delete does not work so we copy into a new object
 		Object.keys(event.platform.cf).forEach((key) => {
-			if (key !== 'tlsClientAuth' && key !== 'tlsExportedAuthenticator') {
+			if (key !== "tlsClientAuth" && key !== "tlsExportedAuthenticator") {
 				cf[key] = event.platform && event.platform.cf && event.platform.cf[key];
 			}
 		});
@@ -47,16 +47,16 @@ const reqLogger: Handle = async ({ event, resolve }) => {
 		request: {
 			deploymentURL: url.hostname,
 			path: `${url.pathname}${url.search}`,
-			...getHeaderMap(event.request.headers, ['user-agent']),
+			...getHeaderMap(event.request.headers, ["user-agent"]),
 			method: event.request.method,
-			ip: getHeaderMap(event.request.headers, ['cf-connecting-ip', 'x-forwarded-for', 'x-real-ip']),
+			ip: getHeaderMap(event.request.headers, ["cf-connecting-ip", "x-forwarded-for", "x-real-ip"]),
 			cf: {
 				...cf
 			}
 		},
 		response: {
 			duration,
-			headers: getHeaderMap(response.headers, ['cf-cache-status', 'cf-ray', 'cf-placement']),
+			headers: getHeaderMap(response.headers, ["cf-cache-status", "cf-ray", "cf-placement"]),
 			status: response.status
 		}
 	});
