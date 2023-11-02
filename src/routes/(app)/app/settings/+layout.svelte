@@ -1,44 +1,46 @@
 <script>
-	import { page } from '$app/stores';
-	import { cn } from '$lib/utils';
+	import { page } from "$app/stores";
+	import { cn } from "$lib/utils";
 
 	const menuItems = [
 		{
-			name: 'My Details',
-			href: '/app/settings'
+			name: "My Details",
+			href: "/app/settings"
 		},
 		{
-			name: 'Profile',
-			href: '/app/settings/profile'
+			name: "Profile",
+			href: "/app/settings/profile"
 		},
 		{
-			name: 'Plan',
-			href: '/app/settings/plan'
+			name: "Plan",
+			href: "/app/settings/plan"
 		},
 		{
-			name: 'Billing',
-			href: '/app/settings/billing'
+			name: "Billing",
+			href: "/app/settings/billing"
 		},
 		{
-			name: 'Notifications',
-			href: '/app/settings/notifications'
+			name: "Notifications",
+			href: "/app/settings/notifications"
 		},
 		{
-			name: 'API',
-			href: '/app/settings/api'
+			name: "API",
+			href: "/app/settings/api"
 		}
 	];
 </script>
 
-<div class="px-4 md:px-8 lg:px-14 bg-highlight w-full text-background/90 pt-8 space-y-4">
-	<h2 class="text-3xl font-semibold">Settings</h2>
-	<nav class="flex flex-row gap-x-4 items-center">
+<div
+	class="w-full space-y-0.5 bg-highlight px-4 pt-4 text-background/90 transition-all md:space-y-1 md:px-8 lg:space-y-4 lg:px-14 lg:pt-8"
+>
+	<h2 class="text-xl font-semibold md:text-2xl lg:text-3xl">Settings</h2>
+	<nav class="flex flex-row items-center gap-x-4 overflow-x-auto">
 		{#each menuItems as item}
 			<a
 				class={cn(
-					'text-xs text-background/60 relative py-3 hover:text-background/90 focus-visible:text-background/90 focus-visible:outline-none',
+					"relative py-3 text-xs text-background/60 hover:text-background/90 focus-visible:text-background/90 focus-visible:outline-none",
 					{
-						'!text-background/90': $page.url.pathname === item.href
+						"!text-background/90": $page.url.pathname === item.href
 					}
 				)}
 				href={item.href}
@@ -52,6 +54,6 @@
 	</nav>
 </div>
 
-<div class="px-4 md:px-8 lg:px-14 my-12">
+<div class="my-6 px-4 md:px-8 lg:my-12 lg:px-14">
 	<slot />
 </div>
