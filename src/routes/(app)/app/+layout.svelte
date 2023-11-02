@@ -84,7 +84,7 @@
 			>
 				<Avatar.Root class="h-7 w-7">
 					<Avatar.Image src={$page.data.session?.user.image} alt="User Image" />
-					<Avatar.Fallback class="text-foreground"
+					<Avatar.Fallback class="text-xs text-foreground"
 						>{getShortName($page.data.session?.user.name ?? "Harry Potter")}</Avatar.Fallback
 					>
 				</Avatar.Root>
