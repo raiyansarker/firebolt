@@ -81,11 +81,11 @@ export const authOptions = {
 		strategy: 'jwt'
 	},
 	prefix: `${baseUrl}/api/auth`,
-	trustHost: true
-	// pages: {
-	// 	signIn: '/login',
-	// 	signOut: '/',
-	// 	error: '/login',
-	// 	verifyRequest: '/login'
-	// }
+	trustHost: true,
+	pages: {
+		signIn: '/login',
+		signOut: '/',
+		error: '/login',
+		verifyRequest: '/login'
+	}
 } satisfies SvelteKitAuthConfig;

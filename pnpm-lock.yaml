@@ -29,6 +29,9 @@ dependencies:
   drizzle-orm:
     specifier: ^0.28.6
     version: 0.28.6(@cloudflare/workers-types@4.20231025.0)(@libsql/client@0.3.6)(better-sqlite3@9.0.0)
+  lucide-svelte:
+    specifier: ^0.291.0
+    version: 0.291.0(svelte@4.2.2)
   radix-icons-svelte:
     specifier: ^1.2.1
     version: 1.2.1
@@ -2037,6 +2040,14 @@ packages:
     dependencies:
       es5-ext: 0.10.62
     dev: true
+
+  /lucide-svelte@0.291.0(svelte@4.2.2):
+    resolution: {integrity: sha512-35POz2Prh1K7I3q35wjpVvyDN4ofhPKl3q9SCZMeNhZpcAOY0Ay66OAEOUTj0IZyM7QyynJr7J4vgUedhXv5fw==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      svelte: 4.2.2
+    dev: false
 
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}

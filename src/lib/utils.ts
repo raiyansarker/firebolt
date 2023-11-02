@@ -56,3 +56,18 @@ export const flyAndScale = (
 };
 
 export const production = process.env.NODE_ENV === 'production';
+
+/**
+ * Get short name from a name
+ * EG. Raiyan Sarker -> RS, Raiyan Siraj Akib -> RS, Raiyan -> RA
+ */
+export const getShortName = (name: string): string => {
+	const words = name.split(' ');
+	if (words.length === 1) {
+		return `${name.substring(0, 2).toUpperCase()}`;
+	}
+
+	const shortName = words[0].substring(0, 1) + words[1].substring(0, 1);
+
+	return shortName.toUpperCase();
+};
