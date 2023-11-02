@@ -1,17 +1,17 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { env } from '$env/dynamic/public';
+	import * as Avatar from '$lib/components/ui/avatar';
 	import { buttonVariants } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import * as Avatar from '$lib/components/ui/avatar';
-	import { page } from '$app/stores';
-	import { cn, getShortName } from '$lib/utils';
+	import { getShortName } from '$lib/utils';
 	import {
-		SearchIcon,
-		SettingsIcon,
 		BellIcon,
-		PlusIcon,
 		HelpCircleIcon,
-		LogOutIcon
+		LogOutIcon,
+		PlusIcon,
+		SearchIcon,
+		SettingsIcon
 	} from 'lucide-svelte';
 
 	const menuItems = [
@@ -40,8 +40,6 @@
 			href: '/app/tickets'
 		}
 	];
-
-	console.log($page.url.pathname);
 </script>
 
 <nav
