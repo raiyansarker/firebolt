@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { env } from '$env/dynamic/public';
-	import * as Avatar from '$lib/components/ui/avatar';
-	import { buttonVariants } from '$lib/components/ui/button';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { getShortName } from '$lib/utils';
+	import { page } from "$app/stores";
+	import { env } from "$env/dynamic/public";
+	import * as Avatar from "$lib/components/ui/avatar";
+	import { buttonVariants } from "$lib/components/ui/button";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+	import { getShortName } from "$lib/utils";
 	import {
 		BellIcon,
 		HelpCircleIcon,
@@ -12,32 +12,32 @@
 		PlusIcon,
 		SearchIcon,
 		SettingsIcon
-	} from 'lucide-svelte';
+	} from "lucide-svelte";
 
 	const menuItems = [
 		{
-			name: 'Home',
-			href: '/'
+			name: "Home",
+			href: "/"
 		},
 		{
-			name: 'Dashboard',
-			href: '/app'
+			name: "Dashboard",
+			href: "/app"
 		},
 		{
-			name: 'Links',
-			href: '/app/links'
+			name: "Links",
+			href: "/app/links"
 		},
 		{
-			name: 'Domains',
-			href: '/app/domains'
+			name: "Domains",
+			href: "/app/domains"
 		},
 		{
-			name: 'Activity',
-			href: '/app/activity'
+			name: "Activity",
+			href: "/app/activity"
 		},
 		{
-			name: 'Tickets',
-			href: '/app/tickets'
+			name: "Tickets",
+			href: "/app/tickets"
 		}
 	];
 </script>
@@ -58,27 +58,27 @@
 		{/each}
 	</div>
 	<div class="flex flex-row items-center gap-x-2">
-		<button class={buttonVariants({ variant: 'ghost', size: 'sm', class: 'h-7 w-7 px-0' })}>
+		<button class={buttonVariants({ variant: "ghost", size: "sm", class: "h-7 w-7 px-0" })}>
 			<SearchIcon size="1rem" />
 		</button>
 		<a
 			href="/app/settings"
-			class={buttonVariants({ variant: 'ghost', size: 'sm', class: 'h-7 w-7 px-0' })}
+			class={buttonVariants({ variant: "ghost", size: "sm", class: "h-7 w-7 px-0" })}
 		>
 			<SettingsIcon size="1rem" />
 		</a>
 		<button
 			class={buttonVariants({
-				variant: 'ghost',
-				size: 'sm',
-				class: 'h-7 w-7 px-0'
+				variant: "ghost",
+				size: "sm",
+				class: "h-7 w-7 px-0"
 			})}
 		>
 			<BellIcon size="1rem" />
 		</button>
 		<DropdownMenu.Root
 			positioning={{
-				placement: 'bottom-start'
+				placement: "bottom-start"
 			}}
 		>
 			<DropdownMenu.Trigger
@@ -86,8 +86,8 @@
 			>
 				<Avatar.Root class="w-7 h-7">
 					<Avatar.Image src={$page.data.session?.user.image} alt="User Image" />
-					<Avatar.Fallback
-						>{getShortName($page.data.session?.user.name ?? 'Harry Potter')}</Avatar.Fallback
+					<Avatar.Fallback class="text-foreground"
+						>{getShortName($page.data.session?.user.name ?? "Harry Potter")}</Avatar.Fallback
 					>
 				</Avatar.Root>
 			</DropdownMenu.Trigger>
