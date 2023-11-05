@@ -25,7 +25,7 @@ export const domains = sqliteTable("domain", {
 		.default(sql`CURRENT_TIMESTAMP`)
 });
 
-export const linksRelations = relations(domains, ({ one }) => ({
+export const domainsRelations = relations(domains, ({ one }) => ({
 	owner: one(users, {
 		fields: [domains.ownerId],
 		references: [users.id]
