@@ -13,6 +13,7 @@
 	import SearchIcon from "~icons/lucide/search";
 	import SettingsIcon from "~icons/lucide/settings";
 	import MobileMenu from "./menu.svelte";
+	import { signOut } from "@auth/sveltekit/client";
 
 	const menuItems = [
 		{
@@ -137,7 +138,7 @@
 					</DropdownMenu.Shortcut>
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item class="cursor-pointer">
+				<DropdownMenu.Item on:click={() => signOut()} class="cursor-pointer">
 					Logout
 					<DropdownMenu.Shortcut>
 						<LogOutIcon class="h-4 w-4" />
