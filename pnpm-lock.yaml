@@ -32,6 +32,9 @@ dependencies:
   radix-icons-svelte:
     specifier: ^1.2.1
     version: 1.2.1
+  svelte-sonner:
+    specifier: ^0.3.0
+    version: 0.3.0(svelte@4.2.2)
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
@@ -3020,6 +3023,14 @@ packages:
       svelte: 4.2.2
       typescript: 5.2.2
     dev: true
+
+  /svelte-sonner@0.3.0(svelte@4.2.2):
+    resolution: {integrity: sha512-AbRxxqQJb0cc2wEbluc+HVbHukYcnXUZtfSCAcxCHjV3JxB7qrBK4s4XUDSBsVT4Lboqk/0Qv7THIghkEl665A==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      svelte: 4.2.2
+    dev: false
 
   /svelte@4.2.2:
     resolution: {integrity: sha512-My2tytF2e2NnHSpn2M7/3VdXT4JdTglYVUuSuK/mXL2XtulPYbeBfl8Dm1QiaKRn0zoULRnL+EtfZHHP0k4H3A==}
