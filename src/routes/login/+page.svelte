@@ -1,26 +1,35 @@
 <script lang="ts">
-	import * as Avatar from '$lib/components/ui/avatar';
-	import { Label } from '$lib/components/ui/label';
-	import { Input } from '$lib/components/ui/input';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import { StarFilled as StarFilledIcon } from 'radix-icons-svelte';
-	import GoogleIcon from '$lib/icons/google.svelte';
-	import GithubIcon from '$lib/icons/github.svelte';
-	import { signIn } from '@auth/sveltekit/client';
+	import * as Avatar from "$lib/components/ui/avatar";
+	import { Label } from "$lib/components/ui/label";
+	import { Input } from "$lib/components/ui/input";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import { StarFilled as StarFilledIcon } from "radix-icons-svelte";
+	import GoogleIcon from "$lib/icons/google.svelte";
+	import GithubIcon from "$lib/icons/github.svelte";
+	import { signIn } from "@auth/sveltekit/client";
+	import { page } from "$app/stores";
+	import { onMount } from "svelte";
+	import { toast } from "svelte-sonner";
+
+	onMount(() => {
+		const error = $page.url.searchParams.get("error");
+
+		error && toast.error(error);
+	});
 </script>
 
 <div
-	class="sm:w-3/5 mx-auto lg:w-screen h-screen lg:h-auto bg-background grid place-items-center lg:place-items-stretch lg:grid-cols-3"
+	class="mx-auto grid h-screen place-items-center bg-background sm:w-3/5 lg:h-auto lg:w-screen lg:grid-cols-3 lg:place-items-stretch"
 >
 	<div class="relative">
 		<a
-			class={buttonVariants({ variant: 'ghost', class: 'fixed lg:absolute top-4 right-4' })}
+			class={buttonVariants({ variant: "ghost", class: "fixed right-4 top-4 lg:absolute" })}
 			href="/">Home</a
 		>
-		<div class="h-full w-full container space-y-6 grid content-center">
+		<div class="container grid h-full w-full content-center space-y-6">
 			<div class="space-y-1">
 				<h1 class="text-2xl font-medium text-foreground">Create account</h1>
-				<p class="text-muted-foreground text-xs">Sign up now – it's free!</p>
+				<p class="text-xs text-muted-foreground">Sign up now – it's free!</p>
 			</div>
 			<form class="space-y-3">
 				<div class="space-y-1">
@@ -44,11 +53,25 @@
 				</div>
 			</div>
 			<div class="space-y-2">
-				<Button on:click={() => signIn('github')} variant="outline" class="w-full" type="submit">
+				<Button
+					on:click={() =>
+						signIn("github", { callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app" })}
+					variant="outline"
+					class="w-full"
+					type="submit"
+				>
 					<GithubIcon class="mr-2 h-4 w-4" />
 					Github
 				</Button>
-				<Button on:click={() => signIn('google')} variant="outline" class="w-full" type="submit">
+				<Button
+					on:click={() =>
+						signIn("google", {
+							callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app"
+						})}
+					variant="outline"
+					class="w-full"
+					type="submit"
+				>
 					<GoogleIcon class="mr-2 h-4 w-4" />
 					Google
 				</Button>
@@ -65,24 +88,24 @@
 			</p>
 		</div>
 	</div>
-	<div class="hidden relative lg:block col-span-2 h-screen">
+	<div class="relative col-span-2 hidden h-screen lg:block">
 		<div
-			class="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1581261946248-3f8d138d74dc?auto=format&fit=crop&q=80&w=1000&flip=h)] bg-no-repeat bg-bottom bg-blend-overlay bg-yellow-900/60 bg-cover"
+			class="absolute inset-0 bg-yellow-900/60 bg-[url(https://images.unsplash.com/photo-1581261946248-3f8d138d74dc?auto=format&fit=crop&q=80&w=1000&flip=h)] bg-cover bg-bottom bg-no-repeat bg-blend-overlay"
 		/>
 		<span
-			class="absolute aspect-square w-32 rounded-md ring-1 ring-white/50 bg-white/20 top-[15%] -right-4 backdrop-blur-sm"
+			class="absolute -right-4 top-[15%] aspect-square w-32 rounded-md bg-white/20 ring-1 ring-white/50 backdrop-blur-sm"
 		/>
 		<span
-			class="absolute aspect-square w-24 left-[15%] top-[10%] rounded-md ring-1 ring-white/50 bg-white/20 backdrop-blur-sm"
+			class="absolute left-[15%] top-[10%] aspect-square w-24 rounded-md bg-white/20 ring-1 ring-white/50 backdrop-blur-sm"
 		/>
 		<span
-			class="absolute aspect-square w-12 left-[calc(15%_-_1.5rem)] top-[calc(10%_+_4.5rem)] rounded-md ring-1 ring-white/50 bg-white/20 backdrop-blur-sm"
+			class="absolute left-[calc(15%_-_1.5rem)] top-[calc(10%_+_4.5rem)] aspect-square w-12 rounded-md bg-white/20 ring-1 ring-white/50 backdrop-blur-sm"
 		/>
-		<div class="absolute bottom-0 inset-x-0 p-12 space-y-6">
-			<h2 class="text-background/90 text-4xl font-medium leading-relaxed">
+		<div class="absolute inset-x-0 bottom-0 space-y-6 p-12">
+			<h2 class="text-4xl font-medium leading-relaxed text-background/90">
 				Unlocking Endless Opportunities,<br /> One Link at a Time.
 			</h2>
-			<p class="text-background/60 text-sm leading-relaxed">
+			<p class="text-sm leading-relaxed text-background/60">
 				Create your free account today and unlock fastest link shortener. No credit card required.
 				Our link shortener, built on Cloudflare, offers unparalleled speed and in depth analytics.
 				Join us for the fastest link shortening experience!
@@ -90,31 +113,31 @@
 			<div class="flex flex-row gap-x-4">
 				<div class="flex flex-row items-center -space-x-2">
 					<!-- This is temporary for markup -->
-					<Avatar.Root class="ring-1 w-8 h-8 ring-background">
+					<Avatar.Root class="h-8 w-8 ring-1 ring-background">
 						<Avatar.Image src="https://github.com/shadcn.png" alt="@shadcn" />
 						<Avatar.Fallback>CN</Avatar.Fallback>
 					</Avatar.Root>
-					<Avatar.Root class="ring-1 w-8 h-8 ring-background">
+					<Avatar.Root class="h-8 w-8 ring-1 ring-background">
 						<Avatar.Image src="https://github.com/raiyansarker.png" alt="@shadcn" />
 						<Avatar.Fallback>CN</Avatar.Fallback>
 					</Avatar.Root>
-					<Avatar.Root class="ring-1 w-8 h-8 ring-background">
+					<Avatar.Root class="h-8 w-8 ring-1 ring-background">
 						<Avatar.Image src="https://github.com/shuding.png" alt="@shadcn" />
 						<Avatar.Fallback>CN</Avatar.Fallback>
 					</Avatar.Root>
-					<Avatar.Root class="ring-1 w-8 h-8 ring-background">
+					<Avatar.Root class="h-8 w-8 ring-1 ring-background">
 						<Avatar.Image src="https://github.com/adamwathan.png" alt="@shadcn" />
 						<Avatar.Fallback>CN</Avatar.Fallback>
 					</Avatar.Root>
-					<Avatar.Root class="ring-1 w-8 h-8 ring-background">
+					<Avatar.Root class="h-8 w-8 ring-1 ring-background">
 						<Avatar.Image src="https://github.com/Rich-Harris.png" alt="@shadcn" />
 						<Avatar.Fallback>CN</Avatar.Fallback>
 					</Avatar.Root>
 				</div>
 				<div class="flex flex-col">
-					<div class="flex flex-row gap-x-1 items-center [&>p]:pl-1">
+					<div class="flex flex-row items-center gap-x-1 [&>p]:pl-1">
 						{#each Array(5) as _}
-							<StarFilledIcon class="w-4 h-4 stroke-yellow-400 text-yellow-500" />
+							<StarFilledIcon class="h-4 w-4 stroke-yellow-400 text-yellow-500" />
 						{/each}
 						<p class="text-xs text-background/60">5.0</p>
 					</div>
