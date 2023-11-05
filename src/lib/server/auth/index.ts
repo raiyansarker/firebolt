@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { users } from "../db/schema";
 import { DrizzleAdapter } from "./drizzle-adapter";
-import { base as baseUrl } from "$app/paths";
 
 export const authOptions = {
 	adapter: DrizzleAdapter(db),
@@ -80,12 +79,11 @@ export const authOptions = {
 	session: {
 		strategy: "jwt"
 	},
-	prefix: `${baseUrl}/api/auth`,
-	trustHost: true
-	// pages: {
-	// 	signIn: "/login",
-	// 	signOut: "/",
-	// 	error: "/login",
-	// 	verifyRequest: "/login"
-	// }
+	trustHost: true,
+	pages: {
+		signIn: "/login",
+		signOut: "/",
+		error: "/login",
+		verifyRequest: "/login"
+	}
 } satisfies SvelteKitAuthConfig;
