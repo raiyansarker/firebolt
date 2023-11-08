@@ -48,7 +48,7 @@
 {#if menuOpen}
 	<MobileMenu bind:menuOpen {menuItems} bind:menuOpenButton />
 {/if}
-<div class="w-full bg-highlight text-background/90 transition-all">
+<div class="sticky top-0 z-50 w-full bg-highlight text-background/90 transition-all">
 	<div
 		class="mx-auto flex w-[calc(100vw_-_8%)] flex-row items-center justify-between py-2 md:w-[calc(100vw_-_15%)]"
 	>
