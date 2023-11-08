@@ -12,12 +12,8 @@ export const links = sqliteTable("link", {
 		.notNull()
 		.primaryKey()
 		.$defaultFn(() => createId()),
-	ownerId: text("owner_id")
-		.notNull()
-		.references(() => users.id),
-	domainId: text("domain_id")
-		.notNull()
-		.references(() => domains.id),
+	ownerId: text("owner_id").notNull(),
+	domainId: text("domain_id").notNull(),
 	shortUrl: text("short_url").unique().notNull(),
 	destinationUrl: text("destinationUrl").notNull(),
 	status: text("status", { enum: LinkStatus }).notNull().$type<LinkStatusType>().default("active"),

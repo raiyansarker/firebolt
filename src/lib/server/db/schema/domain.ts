@@ -11,9 +11,7 @@ export const domains = sqliteTable("domain", {
 		.notNull()
 		.primaryKey()
 		.$defaultFn(() => createId()),
-	ownerId: text("owner_id")
-		.notNull()
-		.references(() => users.id),
+	ownerId: text("owner_id").notNull(),
 	name: text("name").unique().notNull(),
 	status: text("status", { enum: DomainStatus })
 		.notNull()
