@@ -4,9 +4,9 @@
 	import { Input } from "$lib/components/ui/input";
 	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import { StarFilled as StarFilledIcon } from "radix-icons-svelte";
-	import GoogleIcon from "$lib/icons/google.svelte";
-	import GithubIcon from "$lib/icons/github.svelte";
-	import LoadingIcon from "$lib/icons/loading.svelte";
+	import GoogleIcon from "$lib/components/icons/google.svelte";
+	import GithubIcon from "$lib/components/icons/github.svelte";
+	import LoadingIcon from "$lib/components/icons/loading.svelte";
 	import { signIn } from "@auth/sveltekit/client";
 	import { page } from "$app/stores";
 	import { onMount } from "svelte";
