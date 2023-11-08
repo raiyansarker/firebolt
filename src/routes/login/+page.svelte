@@ -6,6 +6,7 @@
 	import { StarFilled as StarFilledIcon } from "radix-icons-svelte";
 	import GoogleIcon from "$lib/icons/google.svelte";
 	import GithubIcon from "$lib/icons/github.svelte";
+	import LoadingIcon from "$lib/icons/loading.svelte";
 	import { signIn } from "@auth/sveltekit/client";
 	import { page } from "$app/stores";
 	import { onMount } from "svelte";
@@ -16,6 +17,9 @@
 
 		error && toast.error(error);
 	});
+
+	let googleLoading = false;
+	let githubLoading = false;
 </script>
 
 <div
@@ -54,25 +58,37 @@
 			</div>
 			<div class="space-y-2">
 				<Button
-					on:click={() =>
-						signIn("github", { callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app" })}
+					on:click={() => {
+						githubLoading = true;
+						signIn("github", { callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app" });
+					}}
 					variant="outline"
 					class="w-full"
 					type="submit"
 				>
-					<GithubIcon class="mr-2 h-4 w-4" />
+					{#if githubLoading}
+						<LoadingIcon class="mr-2 h-4 w-4" />
+					{:else}
+						<GithubIcon class="mr-2 h-4 w-4" />
+					{/if}
 					Github
 				</Button>
 				<Button
-					on:click={() =>
+					on:click={() => {
+						googleLoading = true;
 						signIn("google", {
 							callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app"
-						})}
+						});
+					}}
 					variant="outline"
 					class="w-full"
 					type="submit"
 				>
-					<GoogleIcon class="mr-2 h-4 w-4" />
+					{#if googleLoading}
+						<LoadingIcon class="mr-2 h-4 w-4" />
+					{:else}
+						<GoogleIcon class="mr-2 h-4 w-4" />
+					{/if}
 					Google
 				</Button>
 			</div>
