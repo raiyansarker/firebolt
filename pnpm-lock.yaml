@@ -35,6 +35,9 @@ dependencies:
   clsx:
     specifier: ^2.0.0
     version: 2.0.0
+  cmdk-sv:
+    specifier: ^0.0.6
+    version: 0.0.6(svelte@4.2.2)
   drizzle-orm:
     specifier: ^0.28.6
     version: 0.28.6(@cloudflare/workers-types@4.20231025.0)(@libsql/client@0.3.6)(better-sqlite3@9.0.0)
@@ -1219,6 +1222,15 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
+  /cmdk-sv@0.0.6(svelte@4.2.2):
+    resolution: {integrity: sha512-Wfo77gJD3UMkMZog8tY/h1ITjlhKxsy8ZRLCQ2q89kqBiPeP4j7uO7J2XVB4FaakJq9J/p7afszjCzp1NnBk+Q==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      bits-ui: 0.9.1(svelte@4.2.2)
+      nanoid: 5.0.2
+      svelte: 4.2.2
+    dev: false
   /code-red@1.0.4:
     resolution: {integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==}
     dependencies:
