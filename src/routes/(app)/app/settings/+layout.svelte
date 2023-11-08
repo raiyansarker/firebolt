@@ -1,5 +1,6 @@
 <script>
 	import { page } from "$app/stores";
+	import Pageshell from "$lib/components/ui/page/pageshell.svelte";
 	import { cn } from "$lib/utils";
 
 	const menuItems = [
@@ -56,6 +57,6 @@
 	</div>
 </div>
 
-<div class="mx-auto my-6 w-[calc(100vw_-_8%)] md:w-[calc(100vw_-_15%)] lg:my-12">
+<Pageshell>
 	<slot />
-</div>
+</Pageshell>

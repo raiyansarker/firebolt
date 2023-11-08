@@ -4,9 +4,10 @@
 	import DomainTable from "./table.svelte";
 	import { Separator } from "$lib/components/ui/separator";
 	import PlusIcon from "~icons/lucide/plus";
+	import PageShell from "$lib/components/ui/page/pageshell.svelte";
 </script>
 
-<div class="mx-auto my-6 w-[calc(100vw_-_8%)] md:w-[calc(100vw_-_15%)] lg:my-12">
+<PageShell>
 	<div class="flex w-full flex-row items-start justify-between">
 		<div>
 			<h2 class="text-xl font-bold md:text-2xl">Domain Management</h2>
@@ -29,4 +30,4 @@
 		</div>
 		<DomainTable />
 	</div>
-</div>
+</PageShell>
