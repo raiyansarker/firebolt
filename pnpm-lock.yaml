@@ -20,6 +20,15 @@ dependencies:
   '@paralleldrive/cuid2':
     specifier: ^2.2.2
     version: 2.2.2
+  '@tanstack/svelte-query':
+    specifier: ^5.8.1
+    version: 5.8.1(svelte@4.2.2)
+  '@tanstack/svelte-query-devtools':
+    specifier: ^5.8.1
+    version: 5.8.1(@tanstack/svelte-query@5.8.1)(svelte@4.2.2)
+  axios:
+    specifier: ^1.6.1
+    version: 1.6.1
   bits-ui:
     specifier: ^0.9.1
     version: 0.9.1(svelte@4.2.2)
@@ -44,6 +53,12 @@ dependencies:
   tailwind-variants:
     specifier: ^0.1.18
     version: 0.1.18(tailwindcss@3.3.5)
+  zod:
+    specifier: ^3.22.4
+    version: 3.22.4
+  zod-validation-error:
+    specifier: ^2.1.0
+    version: 2.1.0(zod@3.22.4)
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -761,6 +776,35 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /@tanstack/query-core@5.8.1:
+    resolution: {integrity: sha512-Y0enatz2zQXBAsd7XmajlCs+WaitdR7dIFkqz9Xd7HL4KV04JOigWVreYseTmNH7YFSBSC/BJ9uuNp1MAf+GfA==}
+    dev: false
+
+  /@tanstack/query-devtools@5.7.4:
+    resolution: {integrity: sha512-wx+gwRZUZq7ISXKFJgaAYvVPt+DwTaLKlzaVLB9SLBFIzcL8Jz8jDQGR9ZQp7/O7SVj0TohS8aFuiiGzQUvWyg==}
+    dev: false
+
+  /@tanstack/svelte-query-devtools@5.8.1(@tanstack/svelte-query@5.8.1)(svelte@4.2.2):
+    resolution: {integrity: sha512-86IxpA+bnut0LOXieMDwPYbGDYp+79F/QmG5sEKHFeIiqOUwBzsVz+hay/O7hvlVIgipkOuHa46JHHO8ODjQ+A==}
+    peerDependencies:
+      '@tanstack/svelte-query': ^5.8.1
+      svelte: '>=3 <5'
+    dependencies:
+      '@tanstack/query-devtools': 5.7.4
+      '@tanstack/svelte-query': 5.8.1(svelte@4.2.2)
+      esm-env: 1.0.0
+      svelte: 4.2.2
+    dev: false
+
+  /@tanstack/svelte-query@5.8.1(svelte@4.2.2):
+    resolution: {integrity: sha512-6+HMLdVSRWu2Dv9U/lSAFc8B5qYIGkbgLI7XJu3r8A+BqddviFv9vNtopYKE9xSnJ2Vm8zmnEzJ3TlfODUP5Ng==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      '@tanstack/query-core': 5.8.1
+      svelte: 4.2.2
+    dev: false
+
   /@types/cookie@0.5.3:
     resolution: {integrity: sha512-SLg07AS9z1Ab2LU+QxzU8RCmzsja80ywjf/t5oqw+4NSH20gIGlhLOrBDm1L3PBWzPa4+wkgFQVZAjE6Ioj2ug==}
 
@@ -1013,6 +1057,16 @@ packages:
       postcss: 8.4.31
       postcss-value-parser: 4.2.0
     dev: true
+
+  /axios@1.6.1:
+    resolution: {integrity: sha512-vfBmhDpKafglh0EldBEbVuoe7DyAavGSLWhuSm5ZSEKQnHhBf0xAAwybbNH1IkrJNGnS/VG4I5yxig1pCEXE4g==}
+    dependencies:
+      follow-redirects: 1.15.3
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /axobject-query@3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
@@ -1773,6 +1827,16 @@ packages:
     resolution: {integrity: sha512-N7kHdlgsO/v+iD/dMoJKtsSqs5Dz/dXZVebRgJw23LDk+jMi/974zyiOYDziY2JPp8xivq9BmUGwIJMiuSBi7w==}
     dependencies:
       tabbable: 6.2.0
+    dev: false
+
+  /follow-redirects@1.15.3:
+    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
     dev: false
 
   /form-data@4.0.0:
@@ -2687,6 +2751,10 @@ packages:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
     dev: false
 
+  /proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: false
+
   /pump@3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
     dependencies:
@@ -3468,6 +3536,14 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /zod-validation-error@2.1.0(zod@3.22.4):
+    resolution: {integrity: sha512-VJh93e2wb4c3tWtGgTa0OF/dTt/zoPCPzXq4V11ZjxmEAFaPi/Zss1xIZdEB5RD8GD00U0/iVXgqkF77RV7pdQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      zod: ^3.18.0
+    dependencies:
+      zod: 3.22.4
+    dev: false
+
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: true

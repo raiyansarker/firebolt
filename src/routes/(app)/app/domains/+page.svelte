@@ -1,14 +1,25 @@
-<script>
+<script lang="ts">
 	import { env } from "$env/dynamic/public";
 	import { Button } from "$lib/components/ui/button";
-	import DomainTable from "./table.svelte";
+	import PageShell from "$lib/components/ui/page/pageshell.svelte";
 	import { Separator } from "$lib/components/ui/separator";
 	import PlusIcon from "~icons/lucide/plus";
-	import PageShell from "$lib/components/ui/page/pageshell.svelte";
+	import DomainTable from "./table.svelte";
+
+	import { api } from "$lib/axios";
+	import { createQuery } from "@tanstack/svelte-query";
+	import type { Domains } from "./types";
+
+	const query = createQuery({
+		queryKey: ["domains"],
+		queryFn: () => api.get<Domains[]>("/domains/list"),
+		refetchOnWindowFocus: true,
+		retry: 3
+	});
 </script>
 
 <PageShell>
-	<div class="flex w-full flex-row items-start justify-between">
+	<div class="flex w-full flex-row items-start justify-between gap-x-2">
 		<div>
 			<h2 class="text-xl font-bold md:text-2xl">Domain Management</h2>
 			<p class="text-sm leading-relaxed text-muted-foreground">
@@ -28,6 +39,17 @@
 				Manage your domain and configure it to connect with {env.PUBLIC_APP_NAME}
 			</p>
 		</div>
-		<DomainTable />
+
+		<div class="w-full">
+			{#if $query.isLoading}
+				<p>Loading...</p>
+			{:else if $query.isError}
+				<div class="h-[17.5rem] rounded border border-dotted border-red-500 bg-red-50 p-6">
+					<p class="grid h-full place-items-center text-red-500">Error: {$query.error.message}</p>
+				</div>
+			{:else if $query.isSuccess}
+				<DomainTable data={$query.data.data} />
+			{/if}
+		</div>
 	</div>
 </PageShell>

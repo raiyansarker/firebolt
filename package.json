@@ -49,6 +49,9 @@
 		"@axiomhq/js": "1.0.0-rc.1",
 		"@libsql/client": "^0.3.6",
 		"@paralleldrive/cuid2": "^2.2.2",
+		"@tanstack/svelte-query": "^5.8.1",
+		"@tanstack/svelte-query-devtools": "^5.8.1",
+		"axios": "^1.6.1",
 		"bits-ui": "^0.9.1",
 		"clsx": "^2.0.0",
 		"drizzle-orm": "^0.28.6",
@@ -56,6 +59,8 @@
 		"radix-icons-svelte": "^1.2.1",
 		"svelte-sonner": "^0.3.0",
 		"tailwind-merge": "^2.0.0",
-		"tailwind-variants": "^0.1.18"
+		"tailwind-variants": "^0.1.18",
+		"zod": "^3.22.4",
+		"zod-validation-error": "^2.1.0"
 	}
 }
