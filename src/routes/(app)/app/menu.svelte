@@ -42,7 +42,7 @@
 <svelte:window on:keydown={(e) => e.key === "Escape" && (menuOpen = false)} />
 <div
 	transition:slide={{ duration: 300, axis: "y", easing: linear }}
-	class="absolute inset-0 z-30 space-y-4 bg-highlight px-4 py-6 text-background/70 md:hidden"
+	class="absolute inset-0 z-[9999] space-y-4 bg-highlight px-4 py-6 text-background/70 md:hidden"
 >
 	<div class="flex flex-row items-center justify-between px-2">
 		<h1 class="text-xl font-bold tracking-wide">{env.PUBLIC_APP_NAME}</h1>
