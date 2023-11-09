@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -70,4 +71,41 @@ export const getShortName = (name: string): string => {
 	const shortName = words[0].substring(0, 1) + words[1].substring(0, 1);
 
 	return shortName.toUpperCase();
+};
+
+/**
+ * Typescript type to zod schema
+ * Source: https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbwF4F84DMoRHAREiAE1wFgAocmATzAFM4BJcAG1pFoDsYBnAHgFkitZgD44AXkTk4cANoBrWlTjAOcRVQjo4gwsIC6AWgD8ALjgBXDnvSrahOLQAeMToW46hzBUv3SZcMZwHBbMzI4ubh66wj5UfmQBAUFIAHQAWkQAcqHMAIYARqwAKjS0vGmZhADyYDDAEBx5zKV0FRlEreUx3hr6IgP+SeaVRLX1jc1d7VXTPXH9IkNw5iFhEa7W0V4LyykdhDlhhSVlM51n832DiQEjB3M71wDc5CivFGTOkLAYVgDGEzUoDArHYXAEXgkwVoADdaFARAAKACUUluUFoMAsUDUCGWAHdgDAABbmXjLGQAZX+JLYeQ2UUYLDYnB4kL0ojgADJ0UkkrIrPIOBACRwANJKFRqACiTn+zAsel4Gi0cBpdJAeQANOolGqeiJ9Ks4QiPvy4ChlsjKXBuLT6eYNfTlmjxGI0hACgArWiApH2zV5FHa-zvN7kcgAeijlm4eQA5rRyN9oPBqHQ4ABVbgInrQ-G3YCEczcGBQVQJ-z04DMUvlytwAA+wVy-ia7HrFY4VdutigZayeU7dobPf8-0xeVchAAgjBzAARafJshWz6p37-Rpl7O5qAAYSnrmdWuhILBbN41RAxN4ObzXl1uEntBXc5guGbeGLuAGqNSIlSSRQsZBrOs4DSMtuwTADwIAtZ8iKWhUVDW4O1oe5oMrVD-H7Qdh0wyDUmwntcLXFEPhTJwfnTMo9wRI831cAAFPIqGYCA8gcSQ0lUdAEV4DNaDVB9D2PWhTzyEQgA
+ * Twitter: https://twitter.com/alexdotjs/status/1658409815536812032
+ * Github: https://github.com/colinhacks/zod/issues/2084
+ * Gist: https://gist.github.com/raiyansarker/9f6fd0a3c7ebb345b3218e6cd644ea08
+ */
+type ZodEnhanceType<Model> = {
+	[key in keyof Model]-?: undefined extends Model[key]
+		? null extends Model[key]
+			? z.ZodNullableType<z.ZodOptionalType<z.ZodType<Model[key]>>>
+			: z.ZodOptionalType<z.ZodType<Model[key]>>
+		: null extends Model[key]
+		? z.ZodNullableType<z.ZodType<Model[key]>>
+		: z.ZodType<Model[key]>;
+};
+
+export function zodEnhanced<Model = never>() {
+	return {
+		with: <
+			Schema extends ZodEnhanceType<Model> & {
+				[unknownKey in Exclude<keyof Schema, keyof Model>]: never;
+			}
+		>(
+			schema: Schema
+		) => z.object(schema)
+	};
+}
+
+export type InferPartialSelect<T> = {
+	[K in keyof T]?: boolean;
+};
+
+export const serializeJson = (data: object) => {
+	return encodeURI(JSON.stringify(data));
 };
