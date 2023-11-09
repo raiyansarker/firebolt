@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { env } from "$env/dynamic/public";
-	import { Button } from "$lib/components/ui/button";
+	import { buttonVariants } from "$lib/components/ui/button";
 	import PageShell from "$lib/components/ui/page/pageshell.svelte";
 	import { Separator } from "$lib/components/ui/separator";
 	import PlusIcon from "~icons/lucide/plus";
@@ -8,11 +8,11 @@
 
 	import { api } from "$lib/axios";
 	import { createQuery } from "@tanstack/svelte-query";
-	import type { Domains } from "./types";
+	import type { Domain } from "./types";
 
 	const query = createQuery({
 		queryKey: ["domains"],
-		queryFn: () => api.get<Domains[]>("/domains/list"),
+		queryFn: () => api.get<Domain[]>("/domains/list"),
 		refetchOnWindowFocus: true,
 		retry: 3
 	});
@@ -26,10 +26,13 @@
 				Manage your domain and configure it to connect with {env.PUBLIC_APP_NAME}
 			</p>
 		</div>
-		<Button variant="outline" class="gap-x-2 px-4 text-sm">
+		<a
+			href="/app/domains/create"
+			class={buttonVariants({ variant: "outline", class: "gap-x-2 px-4 text-sm" })}
+		>
 			<PlusIcon class="h-5 w-5" />
 			Add domain
-		</Button>
+		</a>
 	</div>
 	<Separator class="my-3 lg:my-6" />
 	<div class="flex flex-col items-start justify-between gap-6 md:flex-row">

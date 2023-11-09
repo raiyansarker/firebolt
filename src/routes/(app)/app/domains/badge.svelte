@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Badge } from "$lib/components/ui/badge";
 	import DotIcon from "~icons/lucide/dot";
-	import type { Domains } from "./types";
+	import type { Domain } from "./types";
 	import { cn } from "$lib/utils";
-	export let content: Domains["status"];
+	export let content: Domain["status"];
 </script>
 
 <Badge variant="outline" class="inline-flex items-center justify-between gap-x-1.5">

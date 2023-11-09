@@ -2,11 +2,11 @@
 	import { createRender, createTable, Render, Subscribe } from "svelte-headless-table";
 	import { readable } from "svelte/store";
 	import * as Table from "$lib/components/ui/table";
-	import type { Domains } from "./types";
+	import type { Domain } from "./types";
 	import Action from "./action.svelte";
 	import Badge from "./badge.svelte";
 
-	export let data: Domains[];
+	export let data: Domain[];
 	const table = createTable(readable(data));
 	const columns = table.createColumns([
 		table.column({
