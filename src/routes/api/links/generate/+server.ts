@@ -1,7 +1,7 @@
-import { json } from "@sveltejs/kit";
-import type { RequestHandler } from "./$types";
-import { nanoid } from "nanoid";
 import { env } from "$env/dynamic/private";
+import { json } from "@sveltejs/kit";
+import { nanoid } from "nanoid";
+import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async () => {
 	return json({

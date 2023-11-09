@@ -17,6 +17,7 @@ export const domains = sqliteTable("domain", {
 		.notNull()
 		.$type<DomainStatusType>()
 		.default("active"),
+	shared: integer("shared", { mode: "boolean" }).default(false),
 	createdAt: integer("createdAt", { mode: "timestamp_ms" })
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),

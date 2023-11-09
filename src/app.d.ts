@@ -14,6 +14,12 @@ declare global {
 		interface Platform {
 			cf?: IncomingRequestCfProperties;
 		}
+		namespace Superforms {
+			type Message = {
+				type: "error" | "success";
+				text: string;
+			};
+		}
 	}
 }
 

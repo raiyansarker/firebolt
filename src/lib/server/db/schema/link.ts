@@ -3,6 +3,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { users } from "./user";
 import { domains } from "./domain";
+import { nanoid } from "nanoid";
 
 export const LinkStatus = ["active", "hold", "banned"] as const;
 export type LinkStatusType = (typeof LinkStatus)[number];
@@ -14,7 +15,10 @@ export const links = sqliteTable("link", {
 		.$defaultFn(() => createId()),
 	ownerId: text("owner_id").notNull(),
 	domainId: text("domain_id").notNull(),
-	shortUrl: text("short_url").unique().notNull(),
+	shortUrl: text("short_url")
+		.unique()
+		.notNull()
+		.$defaultFn(() => nanoid(6)),
 	destinationUrl: text("destinationUrl").notNull(),
 	status: text("status", { enum: LinkStatus }).notNull().$type<LinkStatusType>().default("active"),
 	createdAt: integer("createdAt", { mode: "timestamp_ms" })

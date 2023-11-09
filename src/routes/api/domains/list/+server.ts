@@ -14,7 +14,9 @@ export const GET: RequestHandler = async ({ locals, url: { searchParams } }) => 
 	const routeSchema = z.object({
 		limit: z.coerce.number().nonnegative().max(100).optional().default(10),
 		status: z.enum(DomainStatus).optional(),
-		select: zodEnhanced<InferPartialSelect<Omit<DomainsModel, "ownerId">>>()
+		select: zodEnhanced<
+			InferPartialSelect<Pick<DomainsModel, "id" | "name" | "status" | "createdAt" | "updatedAt">>
+		>()
 			.with({
 				id: z.boolean().default(true).optional(),
 				name: z.boolean().optional(),

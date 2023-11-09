@@ -5,11 +5,39 @@
 	import { Label } from "$lib/components/ui/label";
 	import { cn } from "$lib/utils.js";
 	import ChevronLeftIcon from "~icons/lucide/chevron-left";
+	import LoadingIcon from "$lib/components/icons/loading.svelte";
 	import ShuffleIcon from "~icons/lucide/shuffle";
 	import { superForm } from "sveltekit-superforms/client";
+	import { api } from "$lib/axios";
+	import { toast } from "svelte-sonner";
 
 	export let data;
-	const { form, constraints, errors, enhance } = superForm(data.form);
+	const { form, constraints, errors, enhance, delayed } = superForm(data.form, {
+		onError({ result }) {
+			toast.error(result.error.message);
+		},
+		onUpdated({ form }) {
+			if (form.message) {
+				switch (form.message.type) {
+					case "success":
+						toast.success(form.message.text);
+						break;
+					case "error":
+						toast.error(form.message.text);
+						break;
+				}
+			}
+		}
+	});
+
+	const getRandomShortUrl = () => {
+		api
+			.get<{ id: string }>("/links/generate")
+			.then((res) => {
+				$form.shortUrl = res.data.id;
+			})
+			.catch((error) => toast.error(error.message));
+	};
 </script>
 
 <div class="h-screen w-screen bg-background">
@@ -22,13 +50,13 @@
 	</a>
 	<div class="grid h-screen w-screen place-items-center">
 		<div class="mx-auto w-full space-y-6 md:w-2/3 lg:w-3/5">
-			<div>
+			<div class="px-6 lg:px-0">
 				<h1 class="text-xl font-semibold md:text-2xl lg:text-3xl">Create new link</h1>
 				<p class="text-sm leading-relaxed text-muted-foreground">
 					Links are scoped to their domain, so you can have the same short link on multiple domains.
 				</p>
 			</div>
-			<div class="grid grid-cols-2 gap-x-6">
+			<div class="grid grid-cols-1 gap-x-6 px-6 lg:grid-cols-2 lg:px-0">
 				<form method="POST" class="flex flex-col gap-y-4 [&>div]:space-y-0.5" use:enhance>
 					<div>
 						<Label for="links_create__destination_url">Destination URL</Label>
@@ -48,7 +76,7 @@
 					<div>
 						<div class="flex flex-row items-center justify-between">
 							<Label for="links_create__short_url">Destination URL</Label>
-							<Button type="button" variant="link" size="sm">
+							<Button on:click={getRandomShortUrl} type="button" variant="link" size="sm">
 								<ShuffleIcon class="mr-1 h-3 w-3" />
 								Random
 							</Button>
@@ -85,7 +113,12 @@
 								>{/if}
 						</div>
 					</div>
-					<Button type="submit">Create Link</Button>
+					<Button type="submit">
+						{#if $delayed}
+							<LoadingIcon class="mr-2 h-4 w-4" />
+						{/if}
+						Create Link
+					</Button>
 				</form>
 				<h1>Hi</h1>
 			</div>
