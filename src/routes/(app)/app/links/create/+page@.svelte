@@ -3,7 +3,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
-	import { cn } from "$lib/utils.js";
+	import { cn } from "$lib/utils";
 	import ChevronLeftIcon from "~icons/lucide/chevron-left";
 	import LoadingIcon from "$lib/components/icons/loading.svelte";
 	import ShuffleIcon from "~icons/lucide/shuffle";

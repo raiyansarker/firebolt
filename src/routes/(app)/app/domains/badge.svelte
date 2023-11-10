@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Badge } from "$lib/components/ui/badge";
-	import DotIcon from "~icons/lucide/dot";
 	import type { Domain } from "./types";
 	import { cn } from "$lib/utils";
 	export let content: Domain["status"];
