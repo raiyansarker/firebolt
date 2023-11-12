@@ -49,12 +49,19 @@
 						redirect: false,
 						callbackUrl: undefined
 					})
-						.then((res) => {
+						.then(async (res) => {
 							if (!res || !res.ok) toast.error("Error sending email, try again later!");
+							if (res) {
+								const { url } = await res.json();
+								if (!!new URL(url).searchParams.get("error")) {
+									toast.error("Error sending email, try again later!");
+								} else {
+									toast.success("Email sent, check your inbox");
+								}
+							}
 
 							emailLoading = false;
 							loginForm.reset();
-							toast.success("Email sent, check your inbox");
 						})
 						.catch(() => {
 							emailLoading = false;

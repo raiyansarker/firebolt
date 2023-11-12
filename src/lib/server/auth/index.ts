@@ -41,10 +41,9 @@ export const authOptions = {
 			async sendVerificationRequest({ identifier: email, url }) {
 				if (!production) return console.log(`Login Link: ${url}`);
 
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				const [_, sendMailError] = await sendMail({
+				await sendMail({
 					to: {
-						email: email
+						email
 					},
 					subject: "Verify your email address",
 					/**
@@ -61,11 +60,6 @@ export const authOptions = {
 						`
 					}
 				});
-
-				if (sendMailError) {
-					console.error(sendMailError);
-					throw new Error("Unable to send email");
-				}
 			}
 		}
 	],

@@ -1,8 +1,6 @@
 import { env } from "$env/dynamic/private";
-import formData from "form-data"; // this package is used by mailgun.js to make the package universal
-import Mailgun from "mailgun.js";
+import { error } from "@sveltejs/kit";
 import { nanoid } from "nanoid";
-import { call } from ".";
 
 type SendMail = {
 	from?: {
@@ -21,8 +19,8 @@ type SendMail = {
 		  }[];
 	subject: string;
 	body: {
-		html?: string;
-		text: string;
+		html: string;
+		text?: string;
 	};
 };
 
@@ -39,42 +37,46 @@ const getDestinationAddress = (destination: SendMail["to"]) => {
 			if (value.name) {
 				address.push(`${value.name} <${value.email}>`);
 			}
-
 			address.push(value.email);
 		}
 
-		return address;
+		return address.join(",");
 	}
 
 	if (destination.name) `${destination.name} <${destination.email}>`;
-
 	return destination.email;
 };
 
 const sendMail = async (opts: SendMail) => {
-	const mailgun = new Mailgun(formData);
-	const email = mailgun.client({
-		username: "api",
-		key: env.MAILGUN_KEY
-	});
-
 	const { from, replyTo, to, subject, body } = opts;
 
-	const message = email.messages.create(env.MAILGUN_DOMAIN, {
-		from: `${from?.name} ?? No Reply <${from?.email ?? env.MAIL_FROM}>`,
-		to: getDestinationAddress(to),
-		subject,
-		text: body.text,
-		html: body.html,
-		"h:Reply-To": replyTo ?? env.MAIL_REPLY_TO,
-		/**
-		 * Gmail and some other clients thread emails, this custom header would prevent that
-		 * Ref: https://stackoverflow.com/a/25435722
-		 */
-		"h:X-Entity-Ref-ID": nanoid()
-	});
+	const message = new URLSearchParams();
+	message.append("from", `${from?.name ?? "No Reply"} <${from?.email ?? env.MAIL_FROM}>`);
+	message.append("to", getDestinationAddress(to));
+	message.append("subject", subject);
+	body.text && message.append("text", body.text);
+	message.append("html", body.html);
+	replyTo || (env.MAIL_REPLY_TO && message.append("h:Reply-To", replyTo ?? env.MAIL_REPLY_TO));
+	/**
+	 * Gmail and some other clients thread emails, this custom header would prevent that
+	 * Ref: https://stackoverflow.com/a/25435722
+	 */
+	message.append("h:X-Entity-Ref-ID", nanoid());
 
-	return await call(message);
+	const res = await fetch(`https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`, {
+		method: "POST",
+		body: message.toString(),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+			Authorization: `Basic ${btoa(`api:${env.MAILGUN_KEY}`)}`
+		}
+	});
+	const json = await res.json();
+
+	if (res.status !== 200) {
+		console.log(json.message ?? "unknown mail api error");
+		throw error(500, json.message ?? "unknown mail api error");
+	}
 };
 
 export { sendMail };
