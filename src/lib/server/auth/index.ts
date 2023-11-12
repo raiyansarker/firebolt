@@ -6,6 +6,9 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { users } from "../db/schema";
 import { DrizzleAdapter } from "./drizzle-adapter";
+import { nanoid } from "nanoid";
+import { production } from "$lib/utils";
+import { sendMail } from "$lib/utils/email.server";
 
 export const authOptions = {
 	adapter: DrizzleAdapter(db),
@@ -15,13 +18,56 @@ export const authOptions = {
 			clientId: env.GITHUB_ID,
 			clientSecret: env.GITHUB_SECRET
 		}),
-		/**
-		 * Todo: add support for email provider
-		 */
 		GoogleProvider({
 			clientId: env.GOOGLE_ID,
 			clientSecret: env.GOOGLE_SECRET
-		})
+		}),
+		{
+			id: "email",
+			type: "email",
+			name: "Email",
+			/**
+			 * These are required until they fix the type error
+			 *
+			 * https://github.com/nextauthjs/next-auth/issues/8125
+			 */
+			from: "notarealemail@definitelynotreal.com",
+			server: {},
+			maxAge: 24 * 60 * 60,
+			options: {},
+			async generateVerificationToken() {
+				return nanoid();
+			},
+			async sendVerificationRequest({ identifier: email, url }) {
+				if (!production) return console.log(`Login Link: ${url}`);
+
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const [_, sendMailError] = await sendMail({
+					to: {
+						email: email
+					},
+					subject: "Verify your email address",
+					/**
+					 * This is temporary
+					 */
+					body: {
+						text: `
+							Please verify your email address by clicking the link below:
+							${url}
+						`,
+						html: `
+							<p>Please verify your email address by clicking the link below:</p>
+							<a href="${url}">${url}</a>
+						`
+					}
+				});
+
+				if (sendMailError) {
+					console.error(sendMailError);
+					throw new Error("Unable to send email");
+				}
+			}
+		}
 	],
 	callbacks: {
 		async signIn({ user }) {

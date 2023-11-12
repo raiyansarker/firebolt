@@ -41,6 +41,12 @@ dependencies:
   drizzle-orm:
     specifier: 0.29.0
     version: 0.29.0(@cloudflare/workers-types@4.20231025.0)(@libsql/client@0.3.6)(better-sqlite3@9.1.1)
+  form-data:
+    specifier: ^4.0.0
+    version: 4.0.0
+  mailgun.js:
+    specifier: ^9.3.0
+    version: 9.3.0
   nanoid:
     specifier: ^5.0.3
     version: 5.0.3
@@ -2605,6 +2611,16 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /mailgun.js@9.3.0:
+    resolution: {integrity: sha512-iRqCglCdi+Q5anFpeRKHiytT/i34E14p/WtTE57VSeq5bATK+zQ8UnpFgPRaqGGTJqyGjqcO9m5YDRRB4/qirw==}
+    dependencies:
+      axios: 1.6.1
+      base-64: 1.0.0
+      url-join: 4.0.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}

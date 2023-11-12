@@ -75,6 +75,7 @@ export const getShortName = (name: string): string => {
 
 /**
  * Typescript type to zod schema
+ *
  * Source: https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbwF4F84DMoRHAREiAE1wFgAocmATzAFM4BJcAG1pFoDsYBnAHgFkitZgD44AXkTk4cANoBrWlTjAOcRVQjo4gwsIC6AWgD8ALjgBXDnvSrahOLQAeMToW46hzBUv3SZcMZwHBbMzI4ubh66wj5UfmQBAUFIAHQAWkQAcqHMAIYARqwAKjS0vGmZhADyYDDAEBx5zKV0FRlEreUx3hr6IgP+SeaVRLX1jc1d7VXTPXH9IkNw5iFhEa7W0V4LyykdhDlhhSVlM51n832DiQEjB3M71wDc5CivFGTOkLAYVgDGEzUoDArHYXAEXgkwVoADdaFARAAKACUUluUFoMAsUDUCGWAHdgDAABbmXjLGQAZX+JLYeQ2UUYLDYnB4kL0ojgADJ0UkkrIrPIOBACRwANJKFRqACiTn+zAsel4Gi0cBpdJAeQANOolGqeiJ9Ks4QiPvy4ChlsjKXBuLT6eYNfTlmjxGI0hACgArWiApH2zV5FHa-zvN7kcgAeijlm4eQA5rRyN9oPBqHQ4ABVbgInrQ-G3YCEczcGBQVQJ-z04DMUvlytwAA+wVy-ia7HrFY4VdutigZayeU7dobPf8-0xeVchAAgjBzAARafJshWz6p37-Rpl7O5qAAYSnrmdWuhILBbN41RAxN4ObzXl1uEntBXc5guGbeGLuAGqNSIlSSRQsZBrOs4DSMtuwTADwIAtZ8iKWhUVDW4O1oe5oMrVD-H7Qdh0wyDUmwntcLXFEPhTJwfnTMo9wRI831cAAFPIqGYCA8gcSQ0lUdAEV4DNaDVB9D2PWhTzyEQgA
  * Twitter: https://twitter.com/alexdotjs/status/1658409815536812032
  * Github: https://github.com/colinhacks/zod/issues/2084
@@ -109,3 +110,33 @@ export type InferPartialSelect<T> = {
 export const serializeJson = (data: object) => {
 	return encodeURI(JSON.stringify(data));
 };
+
+/**
+ * Calls a promise and returns a tuple with the resolved value and null if the promise is resolved,
+ * or null and the error constructor if the promise is rejected.
+ *
+ * @param promise The promise to be called.
+ * @returns A tuple with the resolved value and null if the promise is resolved,
+ * or null and the error constructor if the promise is rejected.
+ */
+export const call = async <T>(
+	promise: Promise<T>
+): Promise<[Awaited<T>, null] | [null, ErrorConstructor]> => {
+	try {
+		const result = await promise;
+		return [result, null];
+	} catch (error) {
+		return [null, error as typeof Error];
+	}
+};
+
+/**
+ * Type that represents an object with the same properties as T.
+ * This type is used to prettify the type of an object.
+ *
+ * @template T - The type of the object to prettify.
+ */
+export type Prettify<T> = {
+	[K in keyof T]: T[K];
+	// eslint-disable-next-line @typescript-eslint/ban-types
+} & {};
