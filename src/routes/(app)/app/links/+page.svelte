@@ -15,6 +15,7 @@
 			</p>
 		</div>
 		<a
+			data-sveltekit-preload-data="tap"
 			class={buttonVariants({ variant: "outline", class: "gap-x-2 px-4 text-sm" })}
 			href="/app/links/create"
 		>
