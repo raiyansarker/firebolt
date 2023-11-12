@@ -1,7 +1,9 @@
+import { env } from "$env/dynamic/private";
 import { db } from "$lib/server/db";
-import type { DomainsModel } from "$lib/server/db/schema";
-import { error, fail } from "@sveltejs/kit";
-import { sql } from "drizzle-orm";
+import { domains as domainsTable, links } from "$lib/server/db/schema";
+import { error } from "@sveltejs/kit";
+import { and, eq } from "drizzle-orm";
+import { nanoid } from "nanoid";
 import { message, superValidate } from "sveltekit-superforms/server";
 import { z } from "zod";
 import type { PageServerLoad } from "./$types";
@@ -9,23 +11,26 @@ import type { PageServerLoad } from "./$types";
 export const _linkCreateSchema = z.object({
 	destinationUrl: z.string().url(),
 	domainId: z.string().cuid2(),
-	shortUrl: z.string().optional()
+	shortUrl: z
+		.string()
+		.regex(/^[A-Za-z0-9_]+$/)
+		.optional()
 });
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.getSession();
 	if (!session) throw error(401);
 
-	/**
-	 * TODO: You can add a limit to these queries to prevent overloading the server.
-	 * But for now, we'll just load all of them.
-	 * FIXME: This is a temporary solution as drizzle doesn't support union queries yet but it is in beta version
-	 * ISSUE: https://github.com/drizzle-team/drizzle-orm/issues/207
-	 * PR: https://github.com/drizzle-team/drizzle-orm/pull/1218
-	 */
-	const domains = (await db.all(
-		sql`select "id", "name" from "domain" where "domain"."owner_id" = ${session.user.id} union select "id", "name" from "domain" where "domain"."shared" = 1`
-	)) as Pick<DomainsModel, "id" | "name">[];
+	const domains = await db
+		.select({ id: domainsTable.id, name: domainsTable.name })
+		.from(domainsTable)
+		.where(and(eq(domainsTable.ownerId, session.user.id), eq(domainsTable.status, "active")))
+		.union(
+			db
+				.select({ id: domainsTable.id, name: domainsTable.name })
+				.from(domainsTable)
+				.where(and(eq(domainsTable.shared, true), eq(domainsTable.status, "active")))
+		);
 
 	const form = await superValidate(
 		/**
@@ -33,48 +38,77 @@ export const load: PageServerLoad = async ({ locals }) => {
 		 */
 		_linkCreateSchema.merge(
 			z.object({
-				domainId: z.string().default(domains[0].id ?? "")
+				domainId: z
+					.string()
+					.cuid2()
+					.default(domains.length ? domains[0].id : "")
 			})
 		)
 	);
 
 	return {
-		domains,
-		form
+		form,
+		domains
 	};
 };
 
 export const actions = {
-	default: async ({ request, fetch }) => {
+	default: async ({ request, locals }) => {
+		const session = await locals.getSession();
+		if (!session) throw error(401);
 		const form = await superValidate(await request.formData(), _linkCreateSchema);
 
+		// create artificial delay of 10 seconds
+		// await new Promise((resolve) => setTimeout(resolve, 10000));
+
 		if (!form.valid) {
-			return message(form, {
-				type: "error",
-				text: "Invalid form"
+			return message(form, "Invalid form", {
+				status: 400
 			});
 		}
 
-		console.log(form.data);
+		/**
+		 * TODO: add dictionary to check for reserved keys like default application paths
+		 */
 
-		const response = await fetch("/api/links/create", {
-			method: "POST",
-			body: JSON.stringify(form.data)
-		}).catch((error) => {
-			return fail(400, { form, error });
-		});
+		/**
+		 * check for existing short url only when it is provided.
+		 * IMPORTANT: keys are unique and uniqueness is scoped to domain
+		 */
+		const linkExists =
+			form.data.shortUrl &&
+			(await db
+				.select({ id: links.id })
+				.from(links)
+				.where(and(eq(links.domainId, form.data.domainId), eq(links.key, form.data.shortUrl)))
+				.limit(1)
+				.then((data) => data[0]));
+		if (linkExists && linkExists.id)
+			return message(form, "Short url is already taken", {
+				status: 400
+			});
 
-		console.log(response.status);
-		if (response.status === 200) {
-			return message(form, {
-				type: "success",
-				text: "Link created successfully"
+		const key = nanoid(Number(env.LINK_DEFAULT_SIZE ?? 6));
+		const data = await db
+			.insert(links)
+			.values({
+				key: form.data.shortUrl ?? key,
+				url: form.data.destinationUrl,
+				domainId: form.data.domainId,
+				ownerId: session.user.id
+			})
+			.catch((error) => {
+				console.log(error);
+				return message(form, "Link creation failed", {
+					status: 400
+				});
 			});
-		} else {
-			return message(form, {
-				type: "error",
-				text: "Link creation failed"
+
+		if (!data)
+			return message(form, "Something went wrong", {
+				status: 400
 			});
-		}
+
+		return message({ ...form, data: { ...form.data, shortUrl: key } }, "Link created successfully");
 	}
 };
