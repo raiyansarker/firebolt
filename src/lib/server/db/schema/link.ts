@@ -17,14 +17,21 @@ export const links = sqliteTable(
 			.$defaultFn(() => createId()),
 		ownerId: text("owner_id").notNull(),
 		domainId: text("domain_id").notNull(),
+
 		key: text("key")
 			.notNull()
 			.$defaultFn(() => nanoid(6)),
 		url: text("url").notNull(),
+
 		status: text("status", { enum: LinkStatus })
 			.notNull()
 			.$type<LinkStatusType>()
 			.default("active"),
+		password: text("password"), // has to be hashed
+		expire: integer("expire", { mode: "timestamp_ms" }), // should also be used to identify expired links
+		delay: integer("delay", { mode: "number" }), // has to be in seconds (min -> 1, max -> 60)
+		clicks: integer("clicks", { mode: "number" }).default(0),
+
 		createdAt: integer("createdAt", { mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),
@@ -33,9 +40,9 @@ export const links = sqliteTable(
 			.default(sql`CURRENT_TIMESTAMP`)
 	},
 	(table) => ({
-		keyIdx: index("key_idx").on(table.key),
-		ownerIdx: index("owner_idx").on(table.ownerId),
-		domainIdx: index("domain_idx").on(table.domainId)
+		keyIdx: index("link_key_idx").on(table.key),
+		ownerIdx: index("link_owner_idx").on(table.ownerId),
+		domainIdx: index("link_domain_idx").on(table.domainId)
 	})
 );
 

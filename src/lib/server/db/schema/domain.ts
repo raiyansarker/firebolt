@@ -14,12 +14,14 @@ export const domains = sqliteTable(
 			.primaryKey()
 			.$defaultFn(() => createId()),
 		ownerId: text("owner_id").notNull(),
+
 		name: text("name").unique().notNull(),
 		status: text("status", { enum: DomainStatus })
 			.notNull()
 			.$type<DomainStatusType>()
 			.default("pending"),
 		shared: integer("shared", { mode: "boolean" }).default(false),
+
 		createdAt: integer("createdAt", { mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),
@@ -28,7 +30,9 @@ export const domains = sqliteTable(
 			.default(sql`CURRENT_TIMESTAMP`)
 	},
 	(table) => ({
-		ownerIdx: index("owner_idx").on(table.ownerId)
+		ownerIdx: index("domain_owner_idx").on(table.ownerId),
+		sharedIdx: index("domain_shared_idx").on(table.shared),
+		name: index("domain_name").on(table.name)
 	})
 );
 
