@@ -1,14 +1,14 @@
 <script lang="ts">
-	import * as Avatar from "$lib/components/ui/avatar";
-	import { Label } from "$lib/components/ui/label";
-	import { Input } from "$lib/components/ui/input";
-	import { Button, buttonVariants } from "$lib/components/ui/button";
-	import { StarFilled as StarFilledIcon } from "radix-icons-svelte";
-	import GoogleIcon from "$lib/components/icons/google.svelte";
-	import GithubIcon from "$lib/components/icons/github.svelte";
-	import LoadingIcon from "$lib/components/icons/loading.svelte";
-	import { signIn } from "@auth/sveltekit/client";
 	import { page } from "$app/stores";
+	import GithubIcon from "$lib/components/icons/github.svelte";
+	import GoogleIcon from "$lib/components/icons/google.svelte";
+	import LoadingIcon from "$lib/components/icons/loading.svelte";
+	import * as Avatar from "$lib/components/ui/avatar";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import { Input } from "$lib/components/ui/input";
+	import { Label } from "$lib/components/ui/label";
+	import { signIn } from "@auth/sveltekit/client";
+	import { StarFilled as StarFilledIcon } from "radix-icons-svelte";
 	import { onMount } from "svelte";
 	import { toast } from "svelte-sonner";
 
@@ -20,6 +20,9 @@
 
 	let googleLoading = false;
 	let githubLoading = false;
+	let emailLoading = false;
+	let email = "";
+	let loginForm: HTMLFormElement;
 </script>
 
 <div
@@ -35,18 +38,49 @@
 				<h1 class="text-2xl font-medium text-foreground">Create account</h1>
 				<p class="text-xs text-muted-foreground">Sign up now – it's free!</p>
 			</div>
-			<form class="space-y-3">
+			<form
+				class="space-y-3"
+				bind:this={loginForm}
+				on:submit|preventDefault={async () => {
+					emailLoading = true;
+
+					signIn("email", {
+						email,
+						redirect: false,
+						callbackUrl: undefined
+					})
+						.then((res) => {
+							if (!res || !res.ok) toast.error("Error sending email, try again later!");
+
+							emailLoading = false;
+							loginForm.reset();
+							toast.success("Email sent, check your inbox");
+						})
+						.catch(() => {
+							emailLoading = false;
+							loginForm.reset();
+							toast.error("Error sending email, try again later");
+						});
+				}}
+			>
 				<div class="space-y-1">
 					<Label class="pl-1" for="login__form_email">Email</Label>
 					<Input
 						type="email"
+						name="email"
 						autocomplete="email"
 						id="login__form_email"
 						placeholder="wizard@hogwarts.edu"
 						required
+						bind:value={email}
 					/>
 				</div>
-				<Button class="w-full" type="submit">Sign In With Email</Button>
+				<Button class="w-full" type="submit">
+					{#if emailLoading}
+						<LoadingIcon class="mr-2 h-4 w-4" />
+					{/if}
+					Sign In With Email
+				</Button>
 			</form>
 			<div class="relative">
 				<div class="absolute inset-0 flex items-center">
@@ -60,7 +94,7 @@
 				<Button
 					on:click={() => {
 						githubLoading = true;
-						signIn("github", { callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app" });
+						signIn("github", { callbackUrl: "/app" });
 					}}
 					variant="outline"
 					class="w-full"
@@ -77,7 +111,7 @@
 					on:click={() => {
 						googleLoading = true;
 						signIn("google", {
-							callbackUrl: $page.url.searchParams.get("callbackUrl") || "/app"
+							callbackUrl: "/app"
 						});
 					}}
 					variant="outline"
