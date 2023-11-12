@@ -1,31 +1,23 @@
 <script lang="ts">
-	import { buttonVariants } from "$lib/components/ui/button";
-	import { Button } from "$lib/components/ui/button";
+	import { api } from "$lib/axios";
+	import LoadingIcon from "$lib/components/icons/loading.svelte";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
 	import { cn } from "$lib/utils";
-	import ChevronLeftIcon from "~icons/lucide/chevron-left";
-	import LoadingIcon from "$lib/components/icons/loading.svelte";
-	import ShuffleIcon from "~icons/lucide/shuffle";
-	import { superForm } from "sveltekit-superforms/client";
-	import { api } from "$lib/axios";
 	import { toast } from "svelte-sonner";
+	import { superForm } from "sveltekit-superforms/client";
+	import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
+	import ChevronLeftIcon from "~icons/lucide/chevron-left";
+	import ShuffleIcon from "~icons/lucide/shuffle";
 
 	export let data;
 	const { form, constraints, errors, enhance, delayed } = superForm(data.form, {
-		onError({ result }) {
-			toast.error(result.error.message);
-		},
 		onUpdated({ form }) {
-			if (form.message) {
-				switch (form.message.type) {
-					case "success":
-						toast.success(form.message.text);
-						break;
-					case "error":
-						toast.error(form.message.text);
-						break;
-				}
+			if (!form.valid || form.errors) {
+				toast.error(form.message);
+			} else {
+				toast.success(form.message);
 			}
 		}
 	});
@@ -40,6 +32,7 @@
 	};
 </script>
 
+<SuperDebug data={$form} />
 <div class="h-screen w-screen bg-background">
 	<a
 		class={buttonVariants({ variant: "ghost", class: "absolute left-6 top-6 gap-x-1 pl-2" })}
