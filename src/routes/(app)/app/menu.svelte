@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { onNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
 	import { env } from "$env/dynamic/public";
 	import { buttonVariants } from "$lib/components/ui/button";
 	import { cn } from "$lib/utils";
+	import { timeline } from "motion";
 	import { afterUpdate, beforeUpdate, onMount } from "svelte";
-	import { linear } from "svelte/easing";
-	import { slide } from "svelte/transition";
+	import type { Action } from "svelte/action";
 	import XIcon from "~icons/lucide/x";
 
 	export const csr = true;
@@ -17,12 +18,18 @@
 
 	let closeButton: HTMLButtonElement;
 	export let menuOpenButton: HTMLButtonElement;
+	export let parentNode: HTMLElement;
 
 	onMount(() => {
 		closeButton.focus();
 
 		return () => menuOpenButton.focus();
 	});
+
+	onNavigate(() => {
+		menuOpen = false;
+	});
+
 	beforeUpdate(() => {
 		if (menuOpen) {
 			document.body.style.overflow = "hidden";
@@ -37,12 +44,28 @@
 			document.body.style.overflowY = "auto";
 		}
 	});
+
+	const mobileNavAnimation: Action<HTMLElement> = (node) => {
+		timeline([
+			[parentNode, { height: "100vh" }, { easing: [0.5, 0, 0.75, 0] }],
+			[node, { opacity: 1 }, { delay: 0.05 }]
+		]);
+
+		return {
+			destroy() {
+				timeline([
+					[node, { opacity: 0 }, { duration: 0 }],
+					[parentNode, { height: "0.5rem" }, { easing: [0.25, 1, 0.5, 1] }]
+				]);
+			}
+		};
+	};
 </script>
 
 <svelte:window on:keydown={(e) => e.key === "Escape" && (menuOpen = false)} />
 <div
-	transition:slide={{ duration: 300, axis: "y", easing: linear }}
-	class="absolute inset-0 z-[9999] space-y-4 bg-highlight px-4 py-6 text-background/70 md:hidden"
+	class="absolute inset-0 z-[9999] space-y-4 px-4 py-6 text-background/70 opacity-0 md:hidden"
+	use:mobileNavAnimation
 >
 	<div class="flex flex-row items-center justify-between px-2">
 		<h1 class="text-xl font-bold tracking-wide">{env.PUBLIC_APP_NAME}</h1>
