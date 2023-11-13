@@ -9,7 +9,7 @@
 	<span
 		class={cn(
 			"h-1.5 w-1.5 rounded-full",
-			{ "bg-yellow-500": content === "hold" },
+			{ "bg-yellow-500": content === "hold" || content === "pending" },
 			{ "bg-destructive": content === "banned" },
 			{ "bg-emerald-500": content === "active" }
 		)}
