@@ -1,6 +1,7 @@
 import { env } from "$env/dynamic/private";
 import { db } from "$lib/server/db";
-import { domains as domainsTable, links } from "$lib/server/db/schema";
+import { domains as domainsTable, links, type LinksModel } from "$lib/server/db/schema";
+import { zodEnhanced } from "$lib/utils";
 import { error } from "@sveltejs/kit";
 import { and, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
@@ -8,13 +9,17 @@ import { message, superValidate } from "sveltekit-superforms/server";
 import { z } from "zod";
 import type { PageServerLoad } from "./$types";
 
-export const _linkCreateSchema = z.object({
-	destinationUrl: z.string().url(),
+const _linkCreateSchema = zodEnhanced<
+	Pick<LinksModel, "url" | "password" | "expire" | "domainId"> & Partial<Pick<LinksModel, "key">>
+>().with({
+	url: z.string().url(),
 	domainId: z.string().cuid2(),
-	shortUrl: z
+	key: z
 		.string()
 		.regex(/^[A-Za-z0-9_]+$/)
-		.optional()
+		.optional(),
+	password: z.string().min(6).nullable(),
+	expire: z.coerce.date().nullable()
 });
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -76,11 +81,11 @@ export const actions = {
 		 * IMPORTANT: keys are unique and uniqueness is scoped to domain
 		 */
 		const linkExists =
-			form.data.shortUrl &&
+			form.data.key &&
 			(await db
 				.select({ id: links.id })
 				.from(links)
-				.where(and(eq(links.domainId, form.data.domainId), eq(links.key, form.data.shortUrl)))
+				.where(and(eq(links.domainId, form.data.domainId), eq(links.key, form.data.key)))
 				.limit(1)
 				.then((data) => data[0]));
 		if (linkExists && linkExists.id)
@@ -92,9 +97,8 @@ export const actions = {
 		const data = await db
 			.insert(links)
 			.values({
-				key: form.data.shortUrl ?? key,
-				url: form.data.destinationUrl,
-				domainId: form.data.domainId,
+				...form.data,
+				key: form.data.key ?? key,
 				ownerId: session.user.id
 			})
 			.catch((error) => {
@@ -109,6 +113,6 @@ export const actions = {
 				status: 400
 			});
 
-		return message({ ...form, data: { ...form.data, shortUrl: key } }, "Link created successfully");
+		return message({ ...form, data: { ...form.data, key } }, "Link created successfully");
 	}
 };
