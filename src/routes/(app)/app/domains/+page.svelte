@@ -6,16 +6,7 @@
 	import PlusIcon from "~icons/lucide/plus";
 	import DomainTable from "./table.svelte";
 
-	import { api } from "$lib/axios";
-	import { createQuery } from "@tanstack/svelte-query";
-	import type { Domain } from "./types";
-
-	const query = createQuery({
-		queryKey: ["domains"],
-		queryFn: () => api.get<Domain[]>("/domains/list"),
-		refetchOnWindowFocus: true,
-		retry: 3
-	});
+	export let data;
 </script>
 
 <PageShell>
@@ -44,15 +35,7 @@
 		</div>
 
 		<div class="w-full">
-			{#if $query.isLoading}
-				<p>Loading...</p>
-			{:else if $query.isError}
-				<div class="h-[17.5rem] rounded border border-dotted border-red-500 bg-red-50 p-6">
-					<p class="grid h-full place-items-center text-red-500">Error: {$query.error.message}</p>
-				</div>
-			{:else if $query.isSuccess}
-				<DomainTable data={$query.data.data} />
-			{/if}
+			<DomainTable data={data.domains} />
 		</div>
 	</div>
 </PageShell>
