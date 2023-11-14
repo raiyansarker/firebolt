@@ -64,7 +64,7 @@
 
 <svelte:window on:keydown={(e) => e.key === "Escape" && (menuOpen = false)} />
 <div
-	class="absolute inset-0 z-[9999] space-y-4 px-4 py-6 text-background/70 opacity-0 md:hidden"
+	class="absolute inset-0 z-[9999] space-y-4 px-4 py-6 text-background/70 opacity-0"
 	use:mobileNavAnimation
 >
 	<div class="flex flex-row items-center justify-between px-2">
