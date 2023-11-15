@@ -8,6 +8,7 @@
 	import { toast } from "svelte-sonner";
 	import { superForm } from "sveltekit-superforms/client";
 	import * as Collapsible from "$lib/components/ui/collapsible";
+	import * as Select from "$lib/components/ui/select";
 	import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
 	import ChevronLeftIcon from "~icons/lucide/chevron-left";
 	import ShuffleIcon from "~icons/lucide/shuffle";
@@ -36,10 +37,10 @@
 	};
 </script>
 
-<!-- <SuperDebug data={$form} /> -->
+<SuperDebug data={$form} />
 <form use:enhance method="POST" class="h-screen w-screen bg-background">
 	<div
-		class="sticky top-0 flex flex-row items-center justify-between border-b px-6 py-2 md:px-40 lg:px-52"
+		class="sticky top-0 flex flex-row items-center justify-between border-b bg-background px-6 py-2 md:px-40 lg:px-52"
 	>
 		<a
 			href="/app/links"
@@ -74,7 +75,7 @@
 						name="url"
 						id="links_create__destination_url"
 						placeholder="https://example.com"
-						aria-invalid={$errors.url ? "true" : undefined}
+						aria-invalid={$errors.url ? true : undefined}
 						bind:value={$form.url}
 						{...$constraints.url}
 					/>
@@ -88,29 +89,33 @@
 							Random
 						</Button>
 					</div>
-					<div class="grid grid-cols-3 divide-x-[1px]">
-						<select
-							class={cn(
-								"flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-								"rounded-r-none border-r-0 text-xs"
-							)}
-							name="domainId"
-							bind:value={$form.domainId}
-							aria-invalid={$errors.domainId ? "true" : undefined}
-							id="links_create__domain_name"
-							{...$constraints.domainId}
+					<div class="grid grid-cols-2 gap-x-2">
+						<Select.Root
+							positioning={{
+								sameWidth: false,
+								placement: "bottom"
+							}}
 						>
-							{#each data.domains as domain}
-								<option value={domain.id}>{domain.name}</option>
-							{/each}
-						</select>
+							<Select.Trigger>
+								<Select.Value class="text-xs text-muted-foreground" placeholder="Select Domain" />
+							</Select.Trigger>
+							<Select.Content>
+								{#each data.domains as domain}
+									<Select.Item class="text-xs" value={domain.id}>{domain.name}</Select.Item>
+								{/each}
+							</Select.Content>
+							<Select.Input
+								name="domainId"
+								aria-invalid={$errors.domainId ? true : undefined}
+								{...$constraints.domainId}
+							/>
+						</Select.Root>
 						<Input
 							type="text"
 							name="key"
 							id="links_create__short_url"
 							placeholder="random"
-							class="col-span-2 rounded-l-none border-l-0"
-							aria-invalid={$errors.key ? "true" : undefined}
+							aria-invalid={$errors.key ? true : undefined}
 							bind:value={$form.key}
 							{...$constraints.key}
 						/>
@@ -119,68 +124,78 @@
 							>{/if}
 					</div>
 				</div>
-				<Collapsible.Root class="!space-y-2">
-					<div class="flex items-center justify-between">
-						<Label for="links_create__password_collapse">Password Protection</Label>
-						<Collapsible.Trigger asChild let:builder>
-							<Button
-								builders={[builder]}
-								variant="ghost"
-								size="sm"
-								type="button"
-								id="links_create__password_collapse"
-								class="h-7 w-7 px-0 md:inline-flex [&>.minus]:data-[state=open]:block [&>.plus]:data-[state=open]:hidden"
-							>
-								<PlusIcon class="plus h-4 w-4 text-muted-foreground" />
-								<MinusIcon class="minus hidden h-4 w-4 text-muted-foreground" />
-								<span class="sr-only">Toggle</span>
-							</Button>
-						</Collapsible.Trigger>
+				<div class="relative">
+					<div class="absolute inset-0 flex items-center">
+						<span class="w-full border-t"></span>
 					</div>
-					<Collapsible.Content>
-						<Input
-							type="password"
-							name="password"
-							placeholder="Alohomora"
-							aria-invalid={$errors.password ? "true" : undefined}
-							bind:value={$form.password}
-							{...$constraints.password}
-						/>
-						{#if $errors.password}<span class="text-xs text-destructive">{$errors.password}</span
-							>{/if}
-					</Collapsible.Content>
-				</Collapsible.Root>
-				<Collapsible.Root class="!space-y-2">
-					<div class="flex items-center justify-between">
-						<Label for="links_create__expire_collapse">Expiration Date</Label>
-						<Collapsible.Trigger asChild let:builder>
-							<Button
-								builders={[builder]}
-								variant="ghost"
-								size="sm"
-								type="button"
-								id="links_create__expire_collapse"
-								class="h-7 w-7 px-0 md:inline-flex [&>.minus]:data-[state=open]:block [&>.plus]:data-[state=open]:hidden"
-							>
-								<PlusIcon class="plus h-4 w-4 text-muted-foreground" />
-								<MinusIcon class="minus hidden h-4 w-4 text-muted-foreground" />
-								<span class="sr-only">Toggle</span>
-							</Button>
-						</Collapsible.Trigger>
+					<div class="relative flex justify-center text-xs uppercase">
+						<span class="bg-background px-2 text-muted-foreground">Optional</span>
 					</div>
-					<Collapsible.Content>
-						<Input
-							type="password"
-							name="password"
-							placeholder="Alohomora"
-							aria-invalid={$errors.password ? "true" : undefined}
-							bind:value={$form.password}
-							{...$constraints.password}
-						/>
-						{#if $errors.password}<span class="text-xs text-destructive">{$errors.password}</span
-							>{/if}
-					</Collapsible.Content>
-				</Collapsible.Root>
+				</div>
+				<div class="flex flex-col divide-y-[1px] [&>*]:py-2">
+					<Collapsible.Root class="!space-y-2">
+						<div class="flex items-center justify-between">
+							<Label for="links_create__password_collapse">Password Protection</Label>
+							<Collapsible.Trigger asChild let:builder>
+								<Button
+									builders={[builder]}
+									variant="ghost"
+									size="sm"
+									type="button"
+									id="links_create__password_collapse"
+									class="h-7 w-7 px-0 md:inline-flex [&>.minus]:data-[state=open]:block [&>.plus]:data-[state=open]:hidden"
+								>
+									<PlusIcon class="plus h-4 w-4 text-muted-foreground" />
+									<MinusIcon class="minus hidden h-4 w-4 text-muted-foreground" />
+									<span class="sr-only">Toggle</span>
+								</Button>
+							</Collapsible.Trigger>
+						</div>
+						<Collapsible.Content>
+							<Input
+								type="password"
+								name="password"
+								placeholder="Alohomora"
+								aria-invalid={$errors.password ? true : undefined}
+								bind:value={$form.password}
+								{...$constraints.password}
+							/>
+							{#if $errors.password}<span class="text-xs text-destructive">{$errors.password}</span
+								>{/if}
+						</Collapsible.Content>
+					</Collapsible.Root>
+					<Collapsible.Root class="!space-y-2">
+						<div class="flex items-center justify-between">
+							<Label for="links_create__expire_collapse">Expiration Date</Label>
+							<Collapsible.Trigger asChild let:builder>
+								<Button
+									builders={[builder]}
+									variant="ghost"
+									size="sm"
+									type="button"
+									id="links_create__expire_collapse"
+									class="h-7 w-7 px-0 md:inline-flex [&>.minus]:data-[state=open]:block [&>.plus]:data-[state=open]:hidden"
+								>
+									<PlusIcon class="plus h-4 w-4 text-muted-foreground" />
+									<MinusIcon class="minus hidden h-4 w-4 text-muted-foreground" />
+									<span class="sr-only">Toggle</span>
+								</Button>
+							</Collapsible.Trigger>
+						</div>
+						<Collapsible.Content>
+							<Input
+								type="password"
+								name="password"
+								placeholder="Alohomora"
+								aria-invalid={$errors.password ? true : undefined}
+								bind:value={$form.password}
+								{...$constraints.password}
+							/>
+							{#if $errors.password}<span class="text-xs text-destructive">{$errors.password}</span
+								>{/if}
+						</Collapsible.Content>
+					</Collapsible.Root>
+				</div>
 			</div>
 			<h1>Hi</h1>
 		</div>
