@@ -1,28 +1,39 @@
 <script lang="ts">
+	import { dev } from "$app/environment";
+	import { goto } from "$app/navigation";
 	import { api } from "$lib/axios";
 	import LoadingIcon from "$lib/components/icons/loading.svelte";
 	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import * as Collapsible from "$lib/components/ui/collapsible";
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
-	import { cn } from "$lib/utils";
+	import * as Select from "$lib/components/ui/select";
 	import { toast } from "svelte-sonner";
 	import { superForm } from "sveltekit-superforms/client";
-	import * as Collapsible from "$lib/components/ui/collapsible";
-	import * as Select from "$lib/components/ui/select";
-	import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
-	import ChevronLeftIcon from "~icons/lucide/chevron-left";
-	import ShuffleIcon from "~icons/lucide/shuffle";
-	import PlusIcon from "~icons/lucide/plus";
 	import MinusIcon from "~icons/lucide/minus";
+	import PlusIcon from "~icons/lucide/plus";
+	import ShuffleIcon from "~icons/lucide/shuffle";
 	import XIcon from "~icons/lucide/x";
 
 	export let data;
-	const { form, constraints, errors, enhance, delayed } = superForm(data.form, {
+	const { form, constraints, errors, enhance, delayed, reset } = superForm(data.form, {
 		onUpdated({ form }) {
-			if (!form.valid || form.errors) {
+			if (!form.valid) {
 				toast.error(form.message);
 			} else {
-				toast.success(form.message);
+				/**
+				 * save url to clipboard
+				 */
+				navigator.clipboard.writeText(
+					`${dev ? "http" : "https"}://${
+						data.domains.filter((domain) => domain.id === form.data.domainId)[0].name
+					}/${form.data.key}`
+				);
+				goto(
+					encodeURI(
+						"/app/links?message=Link created successfully&description=Link is saved to the clipboard"
+					)
+				);
 			}
 		}
 	});
@@ -37,7 +48,6 @@
 	};
 </script>
 
-<SuperDebug data={$form} />
 <form use:enhance method="POST" class="h-screen w-screen bg-background">
 	<div
 		class="sticky top-0 flex flex-row items-center justify-between border-b bg-background px-6 py-2 md:px-40 lg:px-52"

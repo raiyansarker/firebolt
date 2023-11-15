@@ -3,7 +3,20 @@
 	import { buttonVariants } from "$lib/components/ui/button";
 	import PageShell from "$lib/components/ui/page/pageshell.svelte";
 	import { Separator } from "$lib/components/ui/separator";
+	import { onMount } from "svelte";
 	import PlusIcon from "~icons/lucide/plus";
+	import { page } from "$app/stores";
+	import { toast } from "svelte-sonner";
+
+	onMount(() => {
+		const message = $page.url.searchParams.get("message");
+		const description = $page.url.searchParams.get("description");
+
+		message &&
+			toast.error(message, {
+				description: description ?? undefined
+			});
+	});
 </script>
 
 <PageShell>
