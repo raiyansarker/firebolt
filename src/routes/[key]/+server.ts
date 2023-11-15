@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "$lib/server/db";
-import { domains, links } from "$lib/server/db/schema";
+import { domains, links, users } from "$lib/server/db/schema";
 import { error } from "@sveltejs/kit";
 
 export const GET = async (event) => {
@@ -19,14 +19,31 @@ export const GET = async (event) => {
 	const domain = await db
 		.select({
 			id: domains.id,
-			status: domains.status
+			status: domains.status,
+			owner: {
+				status: users.status
+			}
 		})
 		.from(domains)
+		.leftJoin(users, eq(domains.ownerId, users.id))
 		.where(eq(domains.name, DOMAIN_NAME))
 		.limit(1)
 		.then((rows) => rows[0]);
 	if (!domain || domain.status !== "active") {
 		return event.fetch(`/internal/domain/${DOMAIN_NAME}`);
+	}
+
+	/**
+	 * Owner Status Guard
+	 *
+	 * check if the owner of the domain is banned or deleted to prevent redirection
+	 * deleted is used to identify soft deletes which are not yet removed from the database. eventually they will be removed
+	 * banned is used to identify users who are banned from the service and can't access the service anymore, for spam prevention
+	 *
+	 * FIXME: this works for now but it should be modified when teams support lands
+	 */
+	if (domain.owner?.status === "deleted" || domain.owner?.status === "banned") {
+		throw error(404, "Not Found");
 	}
 
 	/**
