@@ -37,19 +37,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 				.where(and(eq(domainsTable.shared, true), eq(domainsTable.status, "active")))
 		);
 
-	const form = await superValidate(
-		/**
-		 * Merge the schema with the default values for the form.
-		 */
-		_linkCreateSchema.merge(
-			z.object({
-				domainId: z
-					.string()
-					.cuid2()
-					.default(domains.length ? domains[0].id : "")
-			})
-		)
-	);
+	const form = await superValidate(_linkCreateSchema);
 
 	return {
 		form,
