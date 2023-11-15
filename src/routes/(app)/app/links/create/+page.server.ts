@@ -16,7 +16,7 @@ const _linkCreateSchema = zodEnhanced<
 	domainId: z.string().cuid2(),
 	key: z
 		.string()
-		.regex(/^[A-Za-z0-9_]+$/)
+		.regex(/^[A-Za-z0-9_-]+$/)
 		.optional(),
 	password: z.string().min(6).nullable(),
 	expire: z.coerce.date().nullable()
