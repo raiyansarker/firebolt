@@ -13,7 +13,7 @@ const _linkCreateSchema = zodEnhanced<
 	Pick<LinksModel, "url" | "password" | "expire" | "domainId"> & Partial<Pick<LinksModel, "key">>
 >().with({
 	url: z.string().url(),
-	domainId: z.string().cuid2(),
+	domainId: z.string().cuid2({ message: "Select a valid domain" }),
 	key: z
 		.string()
 		.regex(/^[A-Za-z0-9_-]+$/)
@@ -55,6 +55,12 @@ export const actions = {
 		// await new Promise((resolve) => setTimeout(resolve, 10000));
 
 		if (!form.valid) {
+			/**
+			 * make sure to remove the password from the form data
+			 * when the form is invalid. and even when password is present
+			 */
+			form.data = { ...form.data, password: null };
+
 			return message(form, "Invalid form", {
 				status: 400
 			});
@@ -76,17 +82,24 @@ export const actions = {
 				.where(and(eq(links.domainId, form.data.domainId), eq(links.key, form.data.key)))
 				.limit(1)
 				.then((data) => data[0]));
-		if (linkExists && linkExists.id)
+		if (linkExists && linkExists.id) {
+			/**
+			 * make sure to remove the password from the form data
+			 * when the form is invalid. and even when password is present
+			 */
+			form.data = { ...form.data, password: null };
+
 			return message(form, "Short url is already taken", {
 				status: 400
 			});
+		}
 
-		const key = nanoid(Number(env.LINK_DEFAULT_SIZE ?? 6));
+		const key = form.data.key ?? nanoid(Number(env.LINK_DEFAULT_SIZE ?? 6));
 		const data = await db
 			.insert(links)
 			.values({
 				...form.data,
-				key: form.data.key ?? key,
+				key: key,
 				ownerId: session.user.id
 			})
 			.catch((error) => {
@@ -96,11 +109,21 @@ export const actions = {
 				});
 			});
 
-		if (!data)
+		if (!data) {
+			/**
+			 * make sure to remove the password from the form data
+			 * when the form is invalid. and even when password is present
+			 */
+			form.data = { ...form.data, password: null };
+
 			return message(form, "Something went wrong", {
 				status: 400
 			});
+		}
 
-		return message({ ...form, data: { ...form.data, key } }, "Link created successfully");
+		return message(
+			{ ...form, data: { ...form.data, password: null, key } },
+			"Link created successfully"
+		);
 	}
 };
