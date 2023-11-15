@@ -94,7 +94,7 @@
 					<span class="w-full border-t"></span>
 				</div>
 				<div class="relative flex justify-center text-xs uppercase">
-					<span class="bg-white px-2 text-zinc-500">Or continue with</span>
+					<span class="bg-background px-2 text-zinc-500">Or continue with</span>
 				</div>
 			</div>
 			<div class="space-y-2">
