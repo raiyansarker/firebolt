@@ -7,7 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { message, superValidate } from "sveltekit-superforms/server";
 import { z } from "zod";
-import { hashSync } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import type { PageServerLoad } from "./$types";
 
 const linkCreateSchema = zodEnhanced<
@@ -93,7 +93,7 @@ export const actions = {
 		}
 
 		const key = form.data.key ?? nanoid(Number(env.LINK_DEFAULT_SIZE ?? 6));
-		const password = form.data.password ? hashSync(form.data.password) : null; // never store plain password
+		const password = form.data.password ? bcrypt.hashSync(form.data.password) : null; // never store plain password
 		const data = await db
 			.insert(links)
 			.values({
