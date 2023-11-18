@@ -5,7 +5,7 @@
 	export let content: Domain["status"];
 </script>
 
-<Badge variant="outline" class="inline-flex items-center justify-between gap-x-1.5">
+<Badge variant="outline" class="inline-flex items-center justify-between gap-x-1.5 rounded-full">
 	<span
 		class={cn(
 			"h-1.5 w-1.5 rounded-full",
