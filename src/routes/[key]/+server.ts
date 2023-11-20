@@ -1,7 +1,8 @@
-import { eq } from "drizzle-orm";
 import { db } from "$lib/server/db";
 import { domains, links, users } from "$lib/server/db/schema";
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
+import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 
 export const GET = async (event) => {
 	/**
@@ -30,7 +31,7 @@ export const GET = async (event) => {
 		.limit(1)
 		.then((rows) => rows[0]);
 	if (!domain || domain.status !== "active") {
-		return event.fetch(`/internal/domain/${DOMAIN_NAME}`);
+		return event.fetch(`/internal/${DOMAIN_NAME}`);
 	}
 
 	/**
@@ -63,28 +64,46 @@ export const GET = async (event) => {
 		.then((rows) => rows[0]);
 	if (!link) throw error(404, "Not Found");
 	if (link.status !== "active") {
-		return event.fetch(`/internal/domain/${KEY.base}`);
+		return event.fetch(`/internal/${DOMAIN_NAME}/${KEY.base}`);
 	}
 
 	/**
 	 * Expiration Guard
 	 */
 	if (link.expire !== null && new Date() > new Date(link.expire)) {
-		return event.fetch(`/internal/link/${link.id}/expired`); // use id for faster query
+		return event.fetch(`/internal/${DOMAIN_NAME}/${KEY.base}/expired`); // use id for faster query
 	}
 
 	/**
 	 * Password Guard
 	 */
 	if (link.password) {
-		return event.fetch(`/internal/link/${link.id}/password`);
+		/**
+		 * password would be provided in the search param
+		 * redirect or rewrite if password is not provided
+		 * or password is incorrect
+		 */
+		const password = event.url.searchParams.get("password");
+		if (!password) {
+			return event.fetch(`/internal/${DOMAIN_NAME}/${KEY.base}/password`);
+		}
+
+		/**
+		 * TODO: rate limit password bruteforce
+		 */
+		if (!bcrypt.compareSync(password, link.password)) {
+			const url = event.url;
+			url.searchParams.delete("password");
+			url.searchParams.set("error", "Invalid Passowrd");
+			throw redirect(303, url);
+		}
 	}
 
 	/**
 	 * Details Page Guard
 	 */
 	if (KEY.details) {
-		return event.fetch(`/internal/link/${link.id}/details`);
+		return event.fetch(`/internal/${DOMAIN_NAME}/${KEY.base}/details`);
 	}
 
 	/**
