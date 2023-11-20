@@ -18,11 +18,12 @@
 			</p>
 		</div>
 		<a
+			data-sveltekit-preload-data="tap"
+			class={buttonVariants({ variant: "outline", class: "gap-x-1 pl-2.5 text-sm" })}
 			href="/app/domains/create"
-			class={buttonVariants({ variant: "outline", class: "gap-x-2 px-4 text-sm" })}
 		>
-			<PlusIcon class="h-5 w-5" />
-			Add domain
+			<PlusIcon class="h-4 w-4" />
+			Add Link
 		</a>
 	</div>
 	<Separator class="my-3 lg:my-6" />
