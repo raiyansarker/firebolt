@@ -23,7 +23,7 @@
 			href="/app/domains/create"
 		>
 			<PlusIcon class="h-4 w-4" />
-			Add Link
+			Add Domain
 		</a>
 	</div>
 	<Separator class="my-3 lg:my-6" />
