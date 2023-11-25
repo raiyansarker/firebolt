@@ -29,7 +29,7 @@
 		</div>
 		<a
 			data-sveltekit-preload-data="tap"
-			class={buttonVariants({ variant: "outline", class: "gap-x-2 px-4 text-sm" })}
+			class={buttonVariants({ variant: "outline", class: "gap-x-1 pl-3.5 text-sm" })}
 			href="/app/links/create"
 		>
 			<PlusIcon class="h-5 w-5" />
